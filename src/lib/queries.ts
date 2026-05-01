@@ -46,7 +46,7 @@ export const FEATURED_PROPERTIES_QUERY = groq`
 `
 
 export const PROPERTY_BY_SLUG_QUERY = groq`
-  *[_type == "property" && slug.current == $slug][0] {
+  *[_type == "property" && slug.current == $slug && status == "disponible"][0] {
     ${PROPERTY_CARD_FIELDS},
     code,
     description,
@@ -81,5 +81,5 @@ export const SIMILAR_PROPERTIES_QUERY = groq`
 `
 
 export const ALL_SLUGS_QUERY = groq`
-  *[_type == "property" && defined(slug.current)]{ "slug": slug.current }
+  *[_type == "property" && defined(slug.current) && status == "disponible"]{ "slug": slug.current }
 `
