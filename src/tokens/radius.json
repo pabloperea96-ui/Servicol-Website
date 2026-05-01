@@ -1,0 +1,36 @@
+{
+  "name": "Radius",
+  "modes": ["Default"],
+  "variables": [
+    {
+      "name": "radius/none",
+      "type": "NUMBER",
+      "values": { "Default": 0 }
+    },
+    {
+      "name": "radius/sm",
+      "type": "NUMBER",
+      "values": { "Default": 4 }
+    },
+    {
+      "name": "radius/md",
+      "type": "NUMBER",
+      "values": { "Default": 8 }
+    },
+    {
+      "name": "radius/lg",
+      "type": "NUMBER",
+      "values": { "Default": 12 }
+    },
+    {
+      "name": "radius/pill",
+      "type": "NUMBER",
+      "values": { "Default": 24 }
+    },
+    {
+      "name": "radius/full",
+      "type": "NUMBER",
+      "values": { "Default": 9999 }
+    }
+  ]
+}

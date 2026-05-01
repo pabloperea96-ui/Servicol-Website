@@ -1,0 +1,36 @@
+{
+  "name": "Motion",
+  "modes": ["Default"],
+  "variables": [
+    {
+      "name": "motion/duration/fast",
+      "type": "NUMBER",
+      "values": { "Default": 120 }
+    },
+    {
+      "name": "motion/duration/base",
+      "type": "NUMBER",
+      "values": { "Default": 200 }
+    },
+    {
+      "name": "motion/duration/slow",
+      "type": "NUMBER",
+      "values": { "Default": 400 }
+    },
+    {
+      "name": "motion/easing/out",
+      "type": "STRING",
+      "values": { "Default": "cubic-bezier(0.0, 0.0, 0.2, 1)" }
+    },
+    {
+      "name": "motion/easing/in",
+      "type": "STRING",
+      "values": { "Default": "cubic-bezier(0.4, 0.0, 1, 1)" }
+    },
+    {
+      "name": "motion/easing/in-out",
+      "type": "STRING",
+      "values": { "Default": "cubic-bezier(0.4, 0.0, 0.2, 1)" }
+    }
+  ]
+}

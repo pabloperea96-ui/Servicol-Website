@@ -1,26 +1,730 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+/* Only scan application source — avoids picking up placeholder class names from
+   repo docs (e.g. `.cursor/rules/*.mdc`) that look like Tailwind arbitrary values. */
+@source "../**/*.{js,ts,jsx,tsx,mdx}";
 
+/* ─────────────────────────────────────────────────────────────
+   LAYER 1 — PRIMITIVE COLOR VARIABLES
+   Raw palette values. Not tied to Tailwind utilities directly.
+   Source: src/tokens/color-primitives.json
+   ───────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primitive-black: #111111;
+  --primitive-grafito: #444444;
+  --primitive-gris: #888888;
+  --primitive-plata: #CCCCCC;
+  --primitive-humo: #E8E8E6;
+  --primitive-niebla: #F5F5F3;
+  --primitive-white: #FFFFFF;
+  --primitive-morado: #521E5B;
+  --primitive-morado-light: #F0DCF5;
+  --primitive-error: #B42318;
+  --primitive-oro: #F5C518;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─────────────────────────────────────────────────────────────
+   LAYER 2 — RESPONSIVE SPACING & TYPOGRAPHY VARIABLES
+   Mobile-first. Values change at md (768px) and lg (1024px).
+   Source: src/tokens/spacing.json & src/tokens/typography.json
+   ───────────────────────────────────────────────────────────── */
+
+/* Mobile (default) */
+:root {
+  /* Spacing — base scale (fixed across all breakpoints) */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+
+  /* Spacing — responsive contextual tokens */
+  --section-y: 48px;
+  --section-x: 20px;
+  --card-padding: 16px;
+  --card-gap: 12px;
+  --nav-height: 56px;
+  --content-max: 390px;
+
+  /* Typography — font sizes (responsive) */
+  --font-size-display-2xl: 32px;
+  --font-size-display-xl: 24px;
+  --font-size-display-lg: 22px;
+  --font-size-display-md: 18px;
+  --font-size-display-sm: 16px;
+  --font-size-body-lg: 16px;
+  --font-size-body-md: 14px;
+  --font-size-label: 11px;
+
+  /* Motion durations */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 400ms;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Tablet (≥ 768px) */
+@media (min-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --section-y: 72px;
+    --section-x: 40px;
+    --card-padding: 20px;
+    --card-gap: 16px;
+    --nav-height: 64px;
+    --content-max: 768px;
+
+    --font-size-display-2xl: 40px;
+    --font-size-display-xl: 32px;
+    --font-size-display-lg: 24px;
+    --font-size-display-md: 20px;
+    --font-size-display-sm: 17px;
+    --font-size-body-lg: 18px;
   }
 }
 
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+  :root {
+    --section-y: 96px;
+    --section-x: 80px;
+    --card-padding: 24px;
+    --card-gap: 20px;
+    --nav-height: 72px;
+    --content-max: 1024px;
+
+    --font-size-display-2xl: 56px;
+    --font-size-display-xl: 40px;
+    --font-size-display-lg: 28px;
+    --font-size-display-md: 22px;
+    --font-size-display-sm: 18px;
+    --font-size-body-lg: 24px;
+    --font-size-body-md: 16px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LAYER 3 — TAILWIND @THEME
+   Generates utility classes from the semantic tokens.
+   Uses `inline` so variable references resolve correctly at
+   compile-time.
+   Source: src/tokens/color-semantic.json, radius.json, motion.json
+   ───────────────────────────────────────────────────────────── */
+@theme inline {
+
+  /* ── Semantic colors ── */
+  --color-text-primary:     var(--primitive-black);
+  --color-text-secondary:   var(--primitive-grafito);
+  --color-text-muted:       var(--primitive-gris);
+  --color-text-inverse:     var(--primitive-white);
+
+  --color-bg-canvas:        var(--primitive-niebla);
+  --color-bg-surface:       var(--primitive-white);
+  --color-bg-subtle:        var(--primitive-humo);
+
+  --color-border-default:   var(--primitive-plata);
+  --color-border-strong:    var(--primitive-gris);
+
+  --color-action-primary:   var(--primitive-black);
+  --color-action-cta:       var(--primitive-morado);
+  --color-action-cta-light: var(--primitive-morado-light);
+  --color-action-error:     var(--primitive-error);
+
+  --color-bg-dark:          var(--primitive-black);
+  --color-status-star:      var(--primitive-oro);
+
+  /* ── Primitive colors (también disponibles como utilidades) ── */
+  --color-black:            var(--primitive-black);
+  --color-grafito:          var(--primitive-grafito);
+  --color-gris:             var(--primitive-gris);
+  --color-plata:            var(--primitive-plata);
+  --color-humo:             var(--primitive-humo);
+  --color-niebla:           var(--primitive-niebla);
+  --color-white:            var(--primitive-white);
+  --color-morado:           var(--primitive-morado);
+  --color-morado-light:     var(--primitive-morado-light);
+  --color-error:            var(--primitive-error);
+  --color-oro:              var(--primitive-oro);
+
+  /* ── Font families ── */
+  --font-display: var(--font-figtree);
+  --font-body:    var(--font-inter);
+  --font-mono:    var(--font-fira-code);
+
+  /* ── Font sizes (responsive — references :root vars updated by @media) ── */
+  --text-display-2xl: var(--font-size-display-2xl);
+  --text-display-xl:  var(--font-size-display-xl);
+  --text-display-lg:  var(--font-size-display-lg);
+  --text-display-md:  var(--font-size-display-md);
+  --text-display-sm:  var(--font-size-display-sm);
+  --text-body-lg:     var(--font-size-body-lg);
+  --text-body-md:     var(--font-size-body-md);
+  --text-label:       var(--font-size-label);
+
+  /* ── Font weights ── */
+  --font-weight-light:     300;
+  --font-weight-regular:   400;
+  --font-weight-medium:    500;
+  --font-weight-semibold:  600;
+  --font-weight-bold:      700;
+  --font-weight-extrabold: 800;
+
+  /* ── Line heights ── */
+  --leading-tight:   1.1;
+  --leading-snug:    1.3;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.6;
+
+  /* ── Letter spacing ── */
+  --tracking-tight:  -0.5px;
+  --tracking-normal: 0px;
+  --tracking-wide:   0.5px;
+  --tracking-wider:  1px;
+
+  /* ── Border radius ── */
+  --radius-none: 0px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-pill: 24px;
+  --radius-full: 9999px;
+
+  /* ── Motion easing ── */
+  --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in:     cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BASE STYLES
+   ───────────────────────────────────────────────────────────── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LAYER 4 — TEXT STYLE UTILITIES
+   Clases de composición tipográfica. Mapeo 1:1 con los
+   text styles de Figma. Fuente: exportado el 26/04/2026.
+   ───────────────────────────────────────────────────────────── */
+@layer components {
+
+  /* ─────────────────────────────────────────────
+     DISPLAY — Figtree
+     ───────────────────────────────────────────── */
+
+  .text-display-2xl {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-2xl);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+
+  .text-display-xl {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-xl);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.3px;
+  }
+
+  .text-display-lg {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-lg);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.2px;
+  }
+
+  .text-display-md {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-md);
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+
+  .text-display-sm {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-sm);
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .text-stat-number {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: -0.3px;
+  }
+
+  .text-progress-percent {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     BODY — Inter
+     ───────────────────────────────────────────── */
+
+  .text-body-xl {
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 45px;
+    letter-spacing: 0;
+  }
+
+  .text-body-lg {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-lg);
+    font-weight: 300;
+    line-height: 28px;
+    letter-spacing: 0;
+  }
+
+  .text-body-md {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-md);
+    font-weight: 400;
+    line-height: 21px;
+    letter-spacing: 0;
+  }
+
+  .text-body-testimonial {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 24px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     CARD — Figtree + Inter
+     ───────────────────────────────────────────── */
+
+  .text-card-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 17px;
+    letter-spacing: 0;
+  }
+
+  .text-card-team-name {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 17px;
+    letter-spacing: 0;
+  }
+
+  .text-card-footer-heading {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0;
+  }
+
+  .text-card-type-eyebrow {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 10px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .text-card-meta {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 11px;
+    letter-spacing: 0;
+  }
+
+  .text-card-address {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 17px;
+    letter-spacing: 0;
+  }
+
+  .text-card-team-role {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 12px;
+    letter-spacing: 0;
+  }
+
+  .text-card-testimonial-author {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     NAV — Inter
+     ───────────────────────────────────────────── */
+
+  .text-nav-link {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+  .text-nav-link-active {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     BUTTON — Inter
+     ───────────────────────────────────────────── */
+
+  .text-button-lg {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.01em;
+  }
+
+  .text-button-default {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 13px;
+    letter-spacing: 0.01em;
+  }
+
+  .text-button-sm {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 11px;
+    letter-spacing: 0.01em;
+  }
+
+  .text-button-text-link {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     FORM — Inter
+     ───────────────────────────────────────────── */
+
+  .text-form-label {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 15px;
+    letter-spacing: 0;
+  }
+
+  .text-form-input {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+  .text-form-placeholder {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+  .text-form-helper {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0;
+  }
+
+  .text-form-error {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0;
+  }
+
+  .text-form-success {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0;
+  }
+
+  .text-form-select-option {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 21px;
+    letter-spacing: 0;
+  }
+
+  .text-form-search-input {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     ATOMS — Inter + Figtree
+     ───────────────────────────────────────────── */
+
+  .text-badge {
+    font-family: var(--font-body);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .text-pill {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 11px;
+    letter-spacing: 0;
+  }
+
+  .text-pill-active {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 11px;
+    letter-spacing: 0;
+  }
+
+  .text-label-caps {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 11px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .text-tooltip {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0;
+  }
+
+  .text-toast {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0;
+  }
+
+  .text-avatar-initial {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 0;
+  }
+
+  .text-avatar-initial-sm {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 0;
+  }
+
+  .text-breadcrumb {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 12px;
+    letter-spacing: 0;
+  }
+
+  .text-breadcrumb-active {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0;
+  }
+
+  .text-pagination {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+  .text-pagination-active {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+  .text-tab {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+  .text-tab-active {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 13px;
+    letter-spacing: 0;
+  }
+
+  .text-filter-tag {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 11px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     SPEC GRID — Inter
+     ───────────────────────────────────────────── */
+
+  .text-spec-label {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    letter-spacing: 0;
+  }
+
+  .text-spec-value {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     STAT — Inter
+     ───────────────────────────────────────────── */
+
+  .text-stat-label {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     FOOTER — Inter
+     ───────────────────────────────────────────── */
+
+  .text-footer-link {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 23px;
+    letter-spacing: 0;
+  }
+
+  .text-footer-copyright {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 11px;
+    letter-spacing: 0;
+  }
+
+
+  /* ─────────────────────────────────────────────
+     MONO — Fira Code
+     ───────────────────────────────────────────── */
+
+  .text-mono-token {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0;
+  }
+
+  /* ─────────────────────────────────────────────
+     PATTERNS & UTILITIES
+     ───────────────────────────────────────────── */
+
+  .hero-pattern {
+    background-color: var(--primitive-niebla);
+    background-image:
+      linear-gradient(var(--primitive-humo) 1px, transparent 1px),
+      linear-gradient(90deg, var(--primitive-humo) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
 }

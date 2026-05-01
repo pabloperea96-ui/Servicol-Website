@@ -1,0 +1,100 @@
+{
+  "name": "Spacing",
+  "modes": ["Mobile", "Tablet", "Desktop"],
+  "variables": [
+    {
+      "comment": "── BASE TOKENS (base-4, iguales en todos los modos) ──",
+      "name": "spacing/base/1",
+      "type": "NUMBER",
+      "values": { "Mobile": 4, "Tablet": 4, "Desktop": 4 }
+    },
+    {
+      "name": "spacing/base/2",
+      "type": "NUMBER",
+      "values": { "Mobile": 8, "Tablet": 8, "Desktop": 8 }
+    },
+    {
+      "name": "spacing/base/3",
+      "type": "NUMBER",
+      "values": { "Mobile": 12, "Tablet": 12, "Desktop": 12 }
+    },
+    {
+      "name": "spacing/base/4",
+      "type": "NUMBER",
+      "values": { "Mobile": 16, "Tablet": 16, "Desktop": 16 }
+    },
+    {
+      "name": "spacing/base/6",
+      "type": "NUMBER",
+      "values": { "Mobile": 24, "Tablet": 24, "Desktop": 24 }
+    },
+    {
+      "name": "spacing/base/8",
+      "type": "NUMBER",
+      "values": { "Mobile": 32, "Tablet": 32, "Desktop": 32 }
+    },
+    {
+      "name": "spacing/base/10",
+      "type": "NUMBER",
+      "values": { "Mobile": 40, "Tablet": 40, "Desktop": 40 }
+    },
+    {
+      "name": "spacing/base/12",
+      "type": "NUMBER",
+      "values": { "Mobile": 48, "Tablet": 48, "Desktop": 48 }
+    },
+    {
+      "name": "spacing/base/16",
+      "type": "NUMBER",
+      "values": { "Mobile": 64, "Tablet": 64, "Desktop": 64 }
+    },
+    {
+      "name": "spacing/base/20",
+      "type": "NUMBER",
+      "values": { "Mobile": 80, "Tablet": 80, "Desktop": 80 }
+    },
+    {
+      "name": "spacing/base/24",
+      "type": "NUMBER",
+      "values": { "Mobile": 96, "Tablet": 96, "Desktop": 96 }
+    },
+
+    {
+      "comment": "── SECTION (cambia por breakpoint) ──",
+      "name": "spacing/section/y",
+      "type": "NUMBER",
+      "values": { "Mobile": 48, "Tablet": 72, "Desktop": 96 }
+    },
+    {
+      "name": "spacing/section/x",
+      "type": "NUMBER",
+      "values": { "Mobile": 20, "Tablet": 40, "Desktop": 80 }
+    },
+
+    {
+      "comment": "── CARD ──",
+      "name": "spacing/card/padding",
+      "type": "NUMBER",
+      "values": { "Mobile": 16, "Tablet": 20, "Desktop": 24 }
+    },
+    {
+      "name": "spacing/card/gap",
+      "type": "NUMBER",
+      "values": { "Mobile": 12, "Tablet": 16, "Desktop": 20 }
+    },
+
+    {
+      "comment": "── NAV ──",
+      "name": "spacing/nav/height",
+      "type": "NUMBER",
+      "values": { "Mobile": 56, "Tablet": 64, "Desktop": 72 }
+    },
+
+    {
+      "comment": "── CONTENT MAX-WIDTH ──",
+      "name": "spacing/content/max",
+      "type": "NUMBER",
+      "values": { "Mobile": 390, "Tablet": 768, "Desktop": 1024 }
+    }
+  ]
+}

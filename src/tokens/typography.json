@@ -1,0 +1,136 @@
+{
+  "name": "Typography",
+  "modes": ["Mobile", "Tablet", "Desktop"],
+  "variables": [
+
+    {
+      "comment": "── FONT FAMILY (no cambia por modo) ──",
+      "name": "font/family/display",
+      "type": "STRING",
+      "values": { "Mobile": "Figtree", "Tablet": "Figtree", "Desktop": "Figtree" }
+    },
+    {
+      "name": "font/family/body",
+      "type": "STRING",
+      "values": { "Mobile": "Inter", "Tablet": "Inter", "Desktop": "Inter" }
+    },
+    {
+      "name": "font/family/mono",
+      "type": "STRING",
+      "values": { "Mobile": "Fira Code", "Tablet": "Fira Code", "Desktop": "Fira Code" }
+    },
+
+    {
+      "comment": "── FONT SIZE (cambia por breakpoint) ──",
+      "name": "font/size/display-2xl",
+      "type": "NUMBER",
+      "values": { "Mobile": 32, "Tablet": 40, "Desktop": 56 }
+    },
+    {
+      "name": "font/size/display-xl",
+      "type": "NUMBER",
+      "values": { "Mobile": 24, "Tablet": 32, "Desktop": 40 }
+    },
+    {
+      "name": "font/size/display-lg",
+      "type": "NUMBER",
+      "values": { "Mobile": 22, "Tablet": 24, "Desktop": 28 }
+    },
+    {
+      "name": "font/size/display-md",
+      "type": "NUMBER",
+      "values": { "Mobile": 18, "Tablet": 20, "Desktop": 22 }
+    },
+    {
+      "name": "font/size/display-sm",
+      "type": "NUMBER",
+      "values": { "Mobile": 16, "Tablet": 17, "Desktop": 18 }
+    },
+    {
+      "name": "font/size/body-lg",
+      "type": "NUMBER",
+      "values": { "Mobile": 16, "Tablet": 18, "Desktop": 24 }
+    },
+    {
+      "name": "font/size/body-md",
+      "type": "NUMBER",
+      "values": { "Mobile": 14, "Tablet": 14, "Desktop": 16 }
+    },
+    {
+      "name": "font/size/label",
+      "type": "NUMBER",
+      "values": { "Mobile": 11, "Tablet": 11, "Desktop": 11 }
+    },
+
+    {
+      "comment": "── FONT WEIGHT (no cambia por modo) ──",
+      "name": "font/weight/light",
+      "type": "NUMBER",
+      "values": { "Mobile": 300, "Tablet": 300, "Desktop": 300 }
+    },
+    {
+      "name": "font/weight/regular",
+      "type": "NUMBER",
+      "values": { "Mobile": 400, "Tablet": 400, "Desktop": 400 }
+    },
+    {
+      "name": "font/weight/medium",
+      "type": "NUMBER",
+      "values": { "Mobile": 500, "Tablet": 500, "Desktop": 500 }
+    },
+    {
+      "name": "font/weight/bold",
+      "type": "NUMBER",
+      "values": { "Mobile": 700, "Tablet": 700, "Desktop": 700 }
+    },
+    {
+      "name": "font/weight/extrabold",
+      "type": "NUMBER",
+      "values": { "Mobile": 800, "Tablet": 800, "Desktop": 800 }
+    },
+
+    {
+      "comment": "── LINE HEIGHT (no cambia por modo) ──",
+      "name": "font/line-height/tight",
+      "type": "NUMBER",
+      "values": { "Mobile": 1.1, "Tablet": 1.1, "Desktop": 1.1 }
+    },
+    {
+      "name": "font/line-height/snug",
+      "type": "NUMBER",
+      "values": { "Mobile": 1.3, "Tablet": 1.3, "Desktop": 1.3 }
+    },
+    {
+      "name": "font/line-height/normal",
+      "type": "NUMBER",
+      "values": { "Mobile": 1.5, "Tablet": 1.5, "Desktop": 1.5 }
+    },
+    {
+      "name": "font/line-height/relaxed",
+      "type": "NUMBER",
+      "values": { "Mobile": 1.6, "Tablet": 1.6, "Desktop": 1.6 }
+    },
+
+    {
+      "comment": "── LETTER SPACING (no cambia por modo) ──",
+      "name": "font/letter-spacing/tight",
+      "type": "NUMBER",
+      "values": { "Mobile": -0.5, "Tablet": -0.5, "Desktop": -0.5 }
+    },
+    {
+      "name": "font/letter-spacing/normal",
+      "type": "NUMBER",
+      "values": { "Mobile": 0, "Tablet": 0, "Desktop": 0 }
+    },
+    {
+      "name": "font/letter-spacing/wide",
+      "type": "NUMBER",
+      "values": { "Mobile": 0.5, "Tablet": 0.5, "Desktop": 0.5 }
+    },
+    {
+      "name": "font/letter-spacing/wider",
+      "type": "NUMBER",
+      "values": { "Mobile": 1, "Tablet": 1, "Desktop": 1 }
+    }
+  ]
+}

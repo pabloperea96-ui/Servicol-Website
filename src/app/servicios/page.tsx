@@ -1,0 +1,116 @@
+// src/app/servicios/page.tsx — Server Component
+import Link          from 'next/link'
+import Navigation    from '@/components/organisms/Navigation'
+import Footer        from '@/components/organisms/Footer'
+import ServiceCardGrid from '@/components/organisms/ServiceCardGrid'
+import Divider       from '@/components/atoms/Divider'
+import { CheckCircle2 } from 'lucide-react'
+
+const HERO = {
+  title:       'Servicios inmobiliarios completos',
+  description:
+    'Más de 25 años acompañando a familias e inversionistas en venta, arriendo, administración y proyectos nuevos en Boyacá.',
+}
+
+const SERVICES = [
+  {
+    title:       'Venta de propiedades',
+    description: 'Te acompañamos en todo el proceso de compra, desde la búsqueda hasta la escritura.',
+    features:    ['Asesoría personalizada', 'Trámites y documentación', 'Negociación de precio'],
+    ctaLabel:    'Ver propiedades en venta',
+    href:        '/portafolio?operacion=venta',
+  },
+  {
+    title:       'Arriendo',
+    description: 'Encuentra el inmueble ideal para arrendar o consigna el tuyo con la confianza de Servicol.',
+    features:    ['Catálogo amplio en la región', 'Estudio de arrendatarios', 'Contratos respaldados'],
+    ctaLabel:    'Ver propiedades en arriendo',
+    href:        '/portafolio?operacion=arriendo',
+  },
+  {
+    title:       'Administración de propiedades',
+    description: 'Gestionamos tu inmueble como si fuera nuestro: pagos, mantenimientos y reportes claros.',
+    features:    ['Recaudo y pagos a tiempo', 'Mantenimiento y reparaciones', 'Reportes mensuales'],
+    ctaLabel:    'Hablar por WhatsApp',
+    href:        'https://wa.me/573112345678?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20administraci%C3%B3n%20de%20propiedades',
+  },
+  {
+    title:       'Proyectos nuevos',
+    description: 'Acceso anticipado a desarrollos sobre planos y obra en construcción en el corredor Duitama–Sogamoso–Paipa.',
+    features:    ['Renders y planos detallados', 'Avance de obra mensual', 'Asesoría en financiación'],
+    ctaLabel:    'Hablar por WhatsApp',
+    href:        'https://wa.me/573112345678?text=Hola%2C%20me%20interesa%20conocer%20los%20proyectos%20nuevos',
+  },
+]
+
+export default function ServiciosPage() {
+  return (
+    <>
+      <Navigation />
+
+      <main className="pt-[var(--nav-height)]">
+
+        {/* Hero */}
+        <section className="px-5 py-12 md:px-12 md:py-16">
+          <div className="mx-auto flex max-w-[948px] flex-col items-center gap-6 text-center">
+            <h1 className="font-display text-display-xl font-bold tracking-tight text-text-primary md:text-display-2xl md:font-extrabold md:leading-[56px]">
+              {HERO.title}
+            </h1>
+            <p className="font-body text-body-lg font-light text-text-secondary md:text-display-xl md:leading-[45px]">
+              {HERO.description}
+            </p>
+          </div>
+        </section>
+
+        {/* Grid de servicios */}
+        <section className="bg-bg-subtle px-5 py-12 md:px-12 md:py-16">
+          <div className="flex flex-col gap-6 md:gap-8">
+            <h2 className="font-display text-display-lg font-bold tracking-tight text-text-primary md:text-display-xl">
+              Nuestros servicios
+            </h2>
+
+            {/* Mobile — cards sin width fijo, siguiendo spec Figma: align-self stretch */}
+            <div className="flex flex-col gap-4 md:hidden">
+              {SERVICES.map((s) => (
+                <article
+                  key={s.title}
+                  className="flex flex-col items-start gap-4 self-stretch rounded-lg border border-border-default bg-bg-surface p-8"
+                >
+                  <h3 className="font-display text-display-sm font-bold text-text-primary">
+                    {s.title}
+                  </h3>
+                  <p className="font-body text-body-md text-text-muted leading-[21px]">
+                    {s.description}
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    {s.features.map((feature) => (
+                      <div key={feature} className="flex items-center gap-2">
+                        <CheckCircle2 size={16} className="shrink-0 text-action-cta" aria-hidden />
+                        <p className="font-body text-body-md text-text-muted">{feature}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <Divider />
+                  <Link
+                    href={s.href}
+                    className="inline-flex items-center gap-2 font-body text-body-md font-medium text-text-primary hover:text-action-cta transition-colors duration-base"
+                  >
+                    {s.ctaLabel} →
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+            {/* Tablet / Desktop — ServiceCardGrid funciona bien */}
+            <div className="hidden md:block">
+              <ServiceCardGrid services={SERVICES} />
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <Footer />
+    </>
+  )
+}

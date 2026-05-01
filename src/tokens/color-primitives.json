@@ -1,0 +1,61 @@
+{
+  "name": "Color",
+  "modes": ["Default"],
+  "variables": [
+    {
+      "name": "color/primitive/black",
+      "type": "COLOR",
+      "values": { "Default": "#111111" }
+    },
+    {
+      "name": "color/primitive/grafito",
+      "type": "COLOR",
+      "values": { "Default": "#444444" }
+    },
+    {
+      "name": "color/primitive/gris",
+      "type": "COLOR",
+      "values": { "Default": "#888888" }
+    },
+    {
+      "name": "color/primitive/plata",
+      "type": "COLOR",
+      "values": { "Default": "#CCCCCC" }
+    },
+    {
+      "name": "color/primitive/humo",
+      "type": "COLOR",
+      "values": { "Default": "#E8E8E6" }
+    },
+    {
+      "name": "color/primitive/niebla",
+      "type": "COLOR",
+      "values": { "Default": "#F5F5F3" }
+    },
+    {
+      "name": "color/primitive/white",
+      "type": "COLOR",
+      "values": { "Default": "#FFFFFF" }
+    },
+    {
+      "name": "color/primitive/morado",
+      "type": "COLOR",
+      "values": { "Default": "#521E5B" }
+    },
+    {
+      "name": "color/primitive/morado-light",
+      "type": "COLOR",
+      "values": { "Default": "#F0DCF5" }
+    },
+    {
+      "name": "color/primitive/error",
+      "type": "COLOR",
+      "values": { "Default": "#B42318" }
+    },
+    {
+      "name": "color/primitive/oro",
+      "type": "COLOR",
+      "values": { "Default": "#F5C518" }
+    }
+  ]
+}

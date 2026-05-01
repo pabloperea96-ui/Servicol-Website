@@ -1,0 +1,81 @@
+{
+  "name": "Color",
+  "modes": ["Default"],
+  "variables": [
+    {
+      "name": "color/text/primary",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/black" } }
+    },
+    {
+      "name": "color/text/secondary",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/grafito" } }
+    },
+    {
+      "name": "color/text/muted",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/gris" } }
+    },
+    {
+      "name": "color/text/inverse",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/white" } }
+    },
+    {
+      "name": "color/bg/canvas",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/niebla" } }
+    },
+    {
+      "name": "color/bg/surface",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/white" } }
+    },
+    {
+      "name": "color/bg/subtle",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/humo" } }
+    },
+    {
+      "name": "color/border/default",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/plata" } }
+    },
+    {
+      "name": "color/border/strong",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/gris" } }
+    },
+    {
+      "name": "color/action/primary",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/black" } }
+    },
+    {
+      "name": "color/action/cta",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/morado" } }
+    },
+    {
+      "name": "color/action/cta-light",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/morado-light" } }
+    },
+    {
+      "name": "color/action/error",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/error" } }
+    },
+    {
+      "name": "color/bg/dark",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/black" } }
+    },
+    {
+      "name": "color/status/star",
+      "type": "COLOR",
+      "values": { "Default": { "aliasName": "color/primitive/oro" } }
+    }
+  ]
+}
