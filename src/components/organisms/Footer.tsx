@@ -1,6 +1,8 @@
-// src/components/organisms/Footer.tsx
-import Link from 'next/link'
-import Icon from '@/components/atoms/Icon'
+import Link                   from 'next/link'
+import Icon                   from '@/components/atoms/Icon'
+import { client }             from '@/sanity/lib/client'
+import { SITE_SETTINGS_QUERY } from '@/lib/queries'
+import type { SiteSettings }   from '@/lib/sanity-mappers'
 
 const PORTAFOLIO_LINKS = [
   { label: 'Apartamentos', href: '/portafolio?tipo=apartamento' },
@@ -16,14 +18,6 @@ const EMPRESA_LINKS = [
   { label: 'Proyectos', href: '/proyectos' },
   { label: 'Contacto',  href: '/contacto'  },
 ]
-
-const CONTACT_INFO = [
-  { type: 'direccion' as const, lines: ['Calle 16 #14-35', 'Duitama, Boyacá'] },
-  { type: 'horario'  as const, lines: ['Lun–Vie: 8am – 6pm', 'Sáb: 9am – 1pm'] },
-  { type: 'telefono' as const, lines: ['+57 311 234 5678'] },
-]
-
-const ICON_MAP = { direccion: 'Pin', horario: 'Clock', telefono: 'Phone' } as const
 
 function FooterHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -44,7 +38,25 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   )
 }
 
-export default function Footer() {
+function ContactItem({ icon, lines }: { icon: React.ReactNode; lines: string[] }) {
+  return (
+    <div className="flex items-start gap-[10px]">
+      {icon}
+      <div className="font-body text-body-md text-text-inverse/80 leading-[21px]">
+        {lines.map((line, i) => <p key={i}>{line}</p>)}
+      </div>
+    </div>
+  )
+}
+
+export default async function Footer() {
+  const settings: SiteSettings | null = await client.fetch(SITE_SETTINGS_QUERY)
+
+  const addressLines = (settings?.officeAddress ?? '').split('\n').filter(Boolean)
+  const hoursLines   = (settings?.officeHours   ?? '').split('\n').filter(Boolean)
+
+  const iconClass = 'shrink-0 text-text-inverse/80 mt-0.5'
+
   return (
     <footer className="bg-action-primary">
       <div className="mx-auto max-w-[1440px] px-5 py-12 md:px-20 md:py-16 flex flex-col gap-8 md:gap-12">
@@ -58,16 +70,18 @@ export default function Footer() {
               Servicol
             </p>
             <p className="font-body text-body-md text-text-inverse/80 leading-[21px] max-w-[334px]">
-              Más de 25 años conectando familias con su hogar ideal en el corredor Duitama – Sogamoso – Paipa.
+              Más de 25 años conectando familias con su hogar ideal en el corredor Duitama – Tibasosa – Paipa.
             </p>
-            <a
-              href="https://instagram.com/servicolinmobiliaria"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram de Servicol"
-            >
-              <Icon type="Instagram" size={24} className="text-text-inverse/80 hover:text-text-inverse transition-colors duration-base" />
-            </a>
+            {settings?.instagram && (
+              <a
+                href={settings.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram de Servicol"
+              >
+                <Icon type="Instagram" size={24} className="text-text-inverse/80 hover:text-text-inverse transition-colors duration-base" />
+              </a>
+            )}
           </div>
 
           {/* Portafolio */}
@@ -89,18 +103,24 @@ export default function Footer() {
           {/* Contacto */}
           <div className="flex flex-col gap-3">
             <FooterHeading>CONTACTO</FooterHeading>
-            {CONTACT_INFO.map(({ type, lines }) => (
-              <div key={type} className="flex items-start gap-[10px]">
-                <Icon
-                  type={ICON_MAP[type]}
-                  size={24}
-                  className="shrink-0 text-text-inverse/80 mt-0.5"
-                />
-                <div className="font-body text-body-md text-text-inverse/80 leading-[21px]">
-                  {lines.map((line, i) => <p key={i}>{line}</p>)}
-                </div>
-              </div>
-            ))}
+            {addressLines.length > 0 && (
+              <ContactItem
+                icon={<Icon type="Pin"   size={24} className={iconClass} />}
+                lines={addressLines}
+              />
+            )}
+            {hoursLines.length > 0 && (
+              <ContactItem
+                icon={<Icon type="Clock" size={24} className={iconClass} />}
+                lines={hoursLines}
+              />
+            )}
+            {settings?.whatsappMain && (
+              <ContactItem
+                icon={<Icon type="Phone" size={24} className={iconClass} />}
+                lines={[settings.whatsappMain]}
+              />
+            )}
           </div>
         </div>
 

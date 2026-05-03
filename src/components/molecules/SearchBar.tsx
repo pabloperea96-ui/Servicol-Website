@@ -24,7 +24,7 @@ const OPERACION_OPTIONS: Option[] = [
 
 const ZONA_OPTIONS: Option[] = [
   { value: 'duitama',  label: 'Duitama'  },
-  { value: 'sogamoso', label: 'Sogamoso' },
+  { value: 'tibasosa', label: 'Tibasosa' },
   { value: 'paipa',    label: 'Paipa'    },
 ]
 

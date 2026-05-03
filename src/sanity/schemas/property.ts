@@ -130,13 +130,15 @@ export default defineType({
 
     defineField({
       name: 'status',
-      title: 'Estado',
+      title: 'Estado del inmueble',
       type: 'string',
       group: 'identification',
       options: {
         list: [
-          { title: 'Disponible', value: 'disponible' },
-          { title: 'No disponible', value: 'no-disponible' },
+          { title: '🟢 Disponible', value: 'disponible' },
+          { title: '🔴 Arrendado',  value: 'arrendado'  },
+          { title: '🔴 Vendido',    value: 'vendido'    },
+          { title: '⚫ Retirado',   value: 'retirado'   },
         ],
         layout: 'radio',
       },
@@ -313,7 +315,7 @@ export default defineType({
           { title: 'Duitama Norte', value: 'duitama-norte' },
           { title: 'Duitama Sur', value: 'duitama-sur' },
           { title: 'Paipa', value: 'paipa' },
-          { title: 'Sogamoso', value: 'sogamoso' },
+          { title: 'Tibasosa', value: 'tibasosa' },
           { title: 'Santa Rosa de Viterbo', value: 'santa-rosa' },
         ],
         layout: 'radio',
@@ -331,34 +333,23 @@ export default defineType({
     }),
 
     defineField({
-      name: 'coordinates',
-      title: 'Coordenadas (aproximadas)',
-      type: 'object',
+      name: 'googleMapsEmbed',
+      title: 'Mapa embebido (Google Maps)',
+      type: 'text',
       group: 'location',
+      rows: 4,
       description:
-        'Coordenadas del sector. Se aplicará un offset en el mapa para proteger la dirección exacta.',
-      fields: [
-        defineField({
-          name: 'lat',
-          title: 'Latitud',
-          type: 'number',
-          validation: (Rule) =>
-            Rule.required()
-              .min(-90)
-              .max(90)
-              .error('Latitud inválida'),
+        'Pega aquí el HTML completo del iframe de Google Maps. ' +
+        'Obtenerlo desde Google Maps → Compartir → Incorporar un mapa → Copiar HTML. ' +
+        'Ejemplo: <iframe src="https://www.google.com/maps/embed?..." ...></iframe>',
+      validation: (Rule) =>
+        Rule.custom((value: string | undefined) => {
+          if (!value) return true
+          if (!value.includes('<iframe') || !value.includes('google.com/maps/embed')) {
+            return 'Pega el HTML completo del iframe de Google Maps (debe contener <iframe y google.com/maps/embed)'
+          }
+          return true
         }),
-        defineField({
-          name: 'lng',
-          title: 'Longitud',
-          type: 'number',
-          validation: (Rule) =>
-            Rule.required()
-              .min(-180)
-              .max(180)
-              .error('Longitud inválida'),
-        }),
-      ],
     }),
 
     // ─── MEDIA ────────────────────────────────────────────────────────────────
@@ -430,6 +421,15 @@ export default defineType({
     }),
 
     defineField({
+      name: 'published',
+      title: 'Publicado en el sitio',
+      type: 'boolean',
+      group: 'contact',
+      description: 'Activa para mostrar esta propiedad en el sitio. Puedes cargarla completa sin publicarla todavía.',
+      initialValue: false,
+    }),
+
+    defineField({
       name: 'featured',
       title: 'Destacar en Home',
       type: 'boolean',
@@ -451,18 +451,26 @@ export default defineType({
 
   preview: {
     select: {
-      title: 'title',
-      code: 'code',
+      title:     'title',
+      code:      'code',
       operation: 'operation',
-      status: 'status',
-      media: 'mainImage',
+      status:    'status',
+      published: 'published',
+      media:     'mainImage',
     },
-    prepare({ title, code, operation, status, media }) {
+    prepare({ title, code, operation, status, published, media }) {
       const operationLabel = operation === 'venta' ? 'Venta' : 'Arriendo'
-      const statusLabel = status === 'disponible' ? '🟢' : '🔴'
+      const STATUS_EMOJI: Record<string, string> = {
+        disponible: '🟢',
+        arrendado:  '🔴',
+        vendido:    '🔴',
+        retirado:   '⚫',
+      }
+      const statusLabel = STATUS_EMOJI[status] ?? '⚫'
+      const draftLabel  = published ? '' : ' · 🚫 No publicado'
       return {
-        title: `${statusLabel} ${title}`,
-        subtitle: `${code} · ${operationLabel}`,
+        title:    `${statusLabel} ${title}`,
+        subtitle: `${code} · ${operationLabel}${draftLabel}`,
         media,
       }
     },

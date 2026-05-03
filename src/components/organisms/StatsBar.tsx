@@ -3,10 +3,10 @@
 type Stat = { value: string; label: string }
 
 const DEFAULT_STATS: Stat[] = [
-  { value: '25+',  label: 'Años de experiencia'  },
-  { value: '500+', label: 'Propiedades vendidas' },
-  { value: '3',    label: 'Ciudades en Boyacá'   },
-  { value: '98%',  label: 'Clientes satisfechos' },
+  { value: '25+',  label: 'Años de experiencia'      },
+  { value: '500+', label: 'Propiedades vendidas'     },
+  { value: '150+', label: 'Propiedades arrendadas'   },
+  { value: '3',    label: 'Ciudades en Boyacá'       },
 ]
 
 type StatsBarProps = {
@@ -40,8 +40,8 @@ export default function StatsBar({ stats = DEFAULT_STATS }: StatsBarProps) {
               statClasses(i, stats.length),
             ].join(' ')}
           >
-            <p className="text-stat-number text-text-inverse">{stat.value}</p>
-            <p className="text-stat-label text-text-inverse/80">{stat.label}</p>
+            <p className="font-display text-display-2xl font-bold text-text-inverse">{stat.value}</p>
+            <p className="text-body-md text-text-inverse/80">{stat.label}</p>
           </div>
         ))}
       </div>

@@ -1,82 +1,24 @@
-'use client'
+import { client }             from '@/sanity/lib/client'
+import { SITE_SETTINGS_QUERY } from '@/lib/queries'
+import type { SiteSettings }   from '@/lib/sanity-mappers'
+import { parseMapSrc }         from '@/lib/parseMapEmbed'
+import NavigationWrapper        from '@/components/organisms/NavigationWrapper'
+import Footer                  from '@/components/organisms/Footer'
+import ContactInfoRow          from '@/components/molecules/ContactInfoRow'
+import ContactoForm            from './ContactoForm'
 
-import { useState } from 'react'
-import Navigation     from '@/components/organisms/Navigation'
-import Footer         from '@/components/organisms/Footer'
-import Input          from '@/components/atoms/Input'
-import Button         from '@/components/atoms/Button'
-import ContactInfoRow from '@/components/molecules/ContactInfoRow'
+export const revalidate = 3600
 
-// ── Constantes ────────────────────────────────────────────────
-const WHATSAPP_NUMBER = '573112345678'
+export default async function ContactoPage() {
+  const settings: SiteSettings | null = await client.fetch(SITE_SETTINGS_QUERY)
 
-const SEARCH_OPTIONS = [
-  { value: '',                 label: 'Selecciona una opción...'        },
-  { value: 'comprar',          label: 'Comprar una propiedad'           },
-  { value: 'arrendar',         label: 'Arrendar una propiedad'          },
-  { value: 'consignar-venta',  label: 'Vender mi propiedad'             },
-  { value: 'consignar-renta',  label: 'Arrendar mi propiedad'           },
-  { value: 'administracion',   label: 'Administración de inmueble'      },
-  { value: 'proyectos',        label: 'Información de proyectos nuevos' },
-  { value: 'otro',             label: 'Otro'                            },
-]
-
-// ── Types ──────────────────────────────────────────────────────
-type FormState = {
-  nombre:   string
-  telefono: string
-  correo:   string
-  tipo:     string
-  mensaje:  string
-}
-
-const INITIAL: FormState = { nombre: '', telefono: '', correo: '', tipo: '', mensaje: '' }
-
-// ── Helpers ────────────────────────────────────────────────────
-function buildWhatsAppMessage(data: FormState): string {
-  const tipoLabel = SEARCH_OPTIONS.find(o => o.value === data.tipo)?.label ?? '—'
-  const lines = [
-    `Hola, mi nombre es ${data.nombre}.`,
-    '',
-    `📞 Teléfono: ${data.telefono || '—'}`,
-    `📧 Correo: ${data.correo || '—'}`,
-    `🎯 Interés: ${tipoLabel}`,
-    '',
-    'Mensaje:',
-    data.mensaje.trim(),
-  ]
-  return encodeURIComponent(lines.join('\n'))
-}
-
-// ── Page ───────────────────────────────────────────────────────
-export default function ContactoPage() {
-  const [form, setForm]           = useState<FormState>(INITIAL)
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError]         = useState('')
-
-  const set =
-    (field: keyof FormState) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-      setForm(prev => ({ ...prev, [field]: e.target.value }))
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!form.nombre.trim() || !form.mensaje.trim()) {
-      setError('El nombre y el mensaje son obligatorios.')
-      return
-    }
-    if (!form.telefono.trim() && !form.correo.trim()) {
-      setError('Ingresa al menos un teléfono o correo para que podamos responderte.')
-      return
-    }
-    setError('')
-    setSubmitted(true)
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${buildWhatsAppMessage(form)}`, '_blank')
-  }
+  const addressLines = (settings?.officeAddress ?? '').split('\n').filter(Boolean)
+  const hoursLines   = (settings?.officeHours   ?? '').split('\n').filter(Boolean)
+  const mapSrc       = parseMapSrc(settings?.googleMapsEmbed)
 
   return (
     <>
-      <Navigation />
+      <NavigationWrapper />
 
       <main className="pt-[var(--nav-height)]">
 
@@ -97,82 +39,7 @@ export default function ContactoPage() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-6">
 
             {/* Form column */}
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                <h2 className="font-display text-display-xl font-bold tracking-tight text-text-primary">
-                  Escríbenos
-                </h2>
-                <p className="font-body text-body-lg font-light text-text-secondary">
-                  Uno de nuestros asesores te contactará en menos de 24 horas.
-                </p>
-              </div>
-
-              {submitted ? (
-                <div className="flex flex-col gap-3 rounded-lg border border-action-cta bg-action-cta-light p-6">
-                  <p className="font-display text-display-sm font-bold text-action-cta">
-                    ¡Mensaje listo!
-                  </p>
-                  <p className="font-body text-body-md text-text-secondary">
-                    Te redirigimos a WhatsApp con tu mensaje pre-rellenado. Si no se abrió, revisa los permisos de popups del navegador.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => { setForm(INITIAL); setSubmitted(false) }}
-                    className="self-start font-body text-body-md font-medium text-action-cta underline"
-                  >
-                    Enviar otro mensaje
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-3" noValidate>
-                  <Input
-                    inputType="text"
-                    label="Nombre completo *"
-                    placeholder="Tu nombre"
-                    value={form.nombre}
-                    onChange={set('nombre')}
-                  />
-                  <Input
-                    inputType="text"
-                    label="Teléfono"
-                    placeholder="+57 300 000 0000"
-                    value={form.telefono}
-                    onChange={set('telefono')}
-                  />
-                  <Input
-                    inputType="text"
-                    label="Correo electrónico"
-                    placeholder="tu@correo.com"
-                    value={form.correo}
-                    onChange={set('correo')}
-                  />
-                  <Input
-                    inputType="select"
-                    label="¿Qué estás buscando?"
-                    value={form.tipo}
-                    onChange={set('tipo')}
-                    options={SEARCH_OPTIONS}
-                  />
-                  <Input
-                    inputType="textarea"
-                    label="Mensaje *"
-                    placeholder="Cuéntanos más sobre lo que buscas..."
-                    value={form.mensaje}
-                    onChange={set('mensaje')}
-                  />
-
-                  {error && (
-                    <p className="font-body text-body-md text-action-error" role="alert">
-                      {error}
-                    </p>
-                  )}
-
-                  <Button type="submit" variant="cta" size="lg" className="mt-2 w-full">
-                    Enviar mensaje
-                  </Button>
-                </form>
-              )}
-            </div>
+            <ContactoForm whatsappNumber={settings?.whatsappMain ?? ''} />
 
             {/* Info + Map column */}
             <div className="flex flex-col gap-6">
@@ -180,14 +47,36 @@ export default function ContactoPage() {
                 Información de contacto
               </h2>
               <div className="flex flex-col gap-3">
-                <ContactInfoRow type="direccion" lines={['Calle 16 #14-35, Duitama', 'Boyacá, Colombia']} />
-                <ContactInfoRow type="horario"   lines={['Lunes a viernes: 8am – 6pm', 'Sábados: 9am – 1pm']} />
-                <ContactInfoRow type="correo"    lines={['info@servicolinmobiliaria.com']} />
-                <ContactInfoRow type="telefono"  lines={['+57 311 234 5678']} />
+                {addressLines.length > 0 && (
+                  <ContactInfoRow type="direccion" lines={addressLines} />
+                )}
+                {hoursLines.length > 0 && (
+                  <ContactInfoRow type="horario" lines={hoursLines} />
+                )}
+                {settings?.email && (
+                  <ContactInfoRow type="correo" lines={[settings.email]} />
+                )}
+                {settings?.whatsappMain && (
+                  <ContactInfoRow type="telefono" lines={[settings.whatsappMain]} />
+                )}
               </div>
-              <div className="flex h-[350px] w-full items-center justify-center overflow-hidden rounded-lg bg-bg-subtle">
-                <p className="font-display text-display-md font-bold text-text-muted">Mapa</p>
-              </div>
+
+              {mapSrc ? (
+                <iframe
+                  src={mapSrc}
+                  width="100%"
+                  height="400"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación oficina Servicol"
+                />
+              ) : (
+                <div className="flex h-[350px] w-full items-center justify-center overflow-hidden rounded-lg bg-bg-subtle">
+                  <p className="font-display text-display-md font-bold text-text-muted">Mapa</p>
+                </div>
+              )}
             </div>
 
           </div>

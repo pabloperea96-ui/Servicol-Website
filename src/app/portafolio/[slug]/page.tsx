@@ -1,7 +1,7 @@
 // src/app/portafolio/[slug]/page.tsx — Server Component
 import { notFound }   from 'next/navigation'
 import Link           from 'next/link'
-import Navigation     from '@/components/organisms/Navigation'
+import NavigationWrapper from '@/components/organisms/NavigationWrapper'
 import Footer         from '@/components/organisms/Footer'
 import Breadcrumb     from '@/components/molecules/Breadcrumb'
 import Badge          from '@/components/atoms/Badge'
@@ -61,7 +61,7 @@ export default async function PropertyDetailPage({
     PROPERTY_BY_SLUG_QUERY,
     { slug },
   )
-  if (!property) notFound()
+  if (!property || property.status !== 'disponible') notFound()
 
   const similarRaw: SanityProperty[] = await client.fetch(
     SIMILAR_PROPERTIES_QUERY,
@@ -71,17 +71,21 @@ export default async function PropertyDetailPage({
   // Completar hasta 4 con propiedades de otro tipo si no hay suficientes
   let similar = similarRaw
   if (similar.length < 4) {
+    const excludeSlugs = [slug, ...similarRaw.map(p => p.slug)]
     const others: SanityProperty[] = await client.fetch(
-      `*[_type == "property" && status == "disponible" && slug.current != $slug] | order(publishedAt desc)[0...${4 - similar.length}] {
+      `*[_type == "property" && status == "disponible" && published == true && !(slug.current in $excludeSlugs)] | order(publishedAt desc)[0...${4 - similar.length}] {
         _id, title, "slug": slug.current, operation, propertyType, price,
         "area": builtArea, bedrooms, bathrooms, parking, zone, neighborhood,
         "location": neighborhood, featured, status,
         "mainImageUrl": mainImage.asset->url, "mainImageAlt": mainImage.alt
       }`,
-      { slug },
+      { excludeSlugs },
     )
     similar = [...similar, ...others]
   }
+
+  // Deduplicar por slug como red de seguridad
+  similar = similar.filter((p, i, arr) => arr.findIndex(q => q.slug === p.slug) === i)
 
   const advisor     = toAdvisor(property.advisor, property.title)
   const images      = toImageUrls(property)
@@ -99,7 +103,7 @@ export default async function PropertyDetailPage({
 
   return (
     <>
-      <Navigation />
+      <NavigationWrapper />
 
       <main className="pt-[var(--nav-height)]">
 
@@ -152,35 +156,50 @@ export default async function PropertyDetailPage({
             <SpecGrid specs={desktopSpecs} columns={3} />
           </div>
 
-          {/* Descripción */}
-          {property.description && (
-            <section className="flex flex-col gap-1">
-              <h2 className="font-display text-display-md font-extrabold md:text-display-lg md:font-bold">
-                Descripción
-              </h2>
-              <p className="whitespace-pre-line font-body text-body-md leading-relaxed text-text-secondary">
-                {property.description}
-              </p>
-            </section>
-          )}
+          {/* Descripción + Amenidades / Ubicación — two-column on desktop */}
+          <div className="flex flex-col gap-6 md:flex-row md:gap-6 md:items-stretch">
 
-          {/* Amenidades */}
-          {property.amenities && property.amenities.length > 0 && (
-            <section className="flex flex-col gap-4">
-              <h2 className="font-display text-display-md font-extrabold md:text-display-lg md:font-bold">
-                <span className="md:hidden">Detalles de la propiedad</span>
-                <span className="hidden md:inline">Amenidades</span>
-              </h2>
-              <div className="flex flex-wrap" style={{ columnGap: '16px', rowGap: '8px' }}>
-                {property.amenities.map(a => (
-                  <Pill key={a} label={a} />
-                ))}
-              </div>
-            </section>
-          )}
+            {/* Left column: Descripción + Amenidades */}
+            <div className="flex flex-col gap-6 md:flex-1">
+              {property.description && (
+                <section className="flex flex-col gap-3">
+                  <h2 className="font-display text-display-md font-extrabold md:text-display-lg md:font-bold">
+                    Descripción
+                  </h2>
+                  <div className="flex flex-col gap-4">
+                    {property.description.split('\n').filter(p => p.trim()).map((paragraph, i) => (
+                      <p key={i} className="whitespace-pre-line font-body text-body-md leading-relaxed text-text-secondary">
+                        {paragraph.trim()}
+                      </p>
+                    ))}
+                  </div>
+                </section>
+              )}
 
-          {/* Ubicación */}
-          <PropertyMap address={address} />
+              {property.amenities && property.amenities.length > 0 && (
+                <section className="flex flex-col gap-4">
+                  <h2 className="font-display text-display-md font-extrabold md:text-display-lg md:font-bold">
+                    <span className="md:hidden">Detalles de la propiedad</span>
+                    <span className="hidden md:inline">Amenidades</span>
+                  </h2>
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 md:gap-6">
+                    {property.amenities.map(a => (
+                      <Pill key={a} label={a} className="md:text-sm md:leading-snug md:px-4 md:py-2" />
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
+
+            {/* Right column: Ubicación + Mapa */}
+            <div className="flex flex-col gap-2 md:w-[708px] md:shrink-0">
+              <h2 className="font-display text-display-md font-extrabold md:text-display-lg md:font-bold">
+                Ubicación
+              </h2>
+              <PropertyMap embedHtml={property.googleMapsEmbed} className="md:flex-1" />
+            </div>
+
+          </div>
 
           {/* Propiedades similares */}
           {similarCards.length > 0 && (

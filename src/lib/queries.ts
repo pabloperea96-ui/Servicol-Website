@@ -3,7 +3,7 @@ import { groq } from 'next-sanity'
 // ─── Fragmento ciudad desde zone ──────────────────────────────────────────────
 const cityFromZone = groq`select(
   zone == "duitama-centro" || zone == "duitama-norte" || zone == "duitama-sur" => "Duitama, Boyacá",
-  zone == "sogamoso"   => "Sogamoso, Boyacá",
+  zone == "tibasosa"   => "Tibasosa, Boyacá",
   zone == "paipa"      => "Paipa, Boyacá",
   zone == "santa-rosa" => "Santa Rosa, Boyacá",
   "Boyacá"
@@ -33,28 +33,28 @@ const PROPERTY_CARD_FIELDS = groq`
 // ─── Queries principales ──────────────────────────────────────────────────────
 
 export const ALL_PROPERTIES_QUERY = groq`
-  *[_type == "property" && status == "disponible"] | order(publishedAt desc) {
+  *[_type == "property" && status == "disponible" && published == true] | order(publishedAt desc) {
     ${PROPERTY_CARD_FIELDS}
   }
 `
 
 export const FEATURED_PROPERTIES_QUERY = groq`
-  *[_type == "property" && status == "disponible" && featured == true]
+  *[_type == "property" && status == "disponible" && published == true && featured == true]
   | order(publishedAt desc)[0...12] {
     ${PROPERTY_CARD_FIELDS}
   }
 `
 
 export const PROPERTY_BY_SLUG_QUERY = groq`
-  *[_type == "property" && slug.current == $slug && status == "disponible"][0] {
+  *[_type == "property" && slug.current == $slug && status == "disponible" && published == true][0] {
     ${PROPERTY_CARD_FIELDS},
     code,
     description,
     amenities,
     floor,
     stratum,
-    coordinates,
     "address": neighborhood + ", " + ${cityFromZone},
+    googleMapsEmbed,
     "gallery": gallery[]{
       "url":     asset->url,
       "alt":     alt,
@@ -72,7 +72,7 @@ export const PROPERTY_BY_SLUG_QUERY = groq`
 export const SIMILAR_PROPERTIES_QUERY = groq`
   *[
     _type == "property"
-    && status == "disponible"
+    && status == "disponible" && published == true
     && propertyType == $propertyType
     && slug.current != $slug
   ] | order(publishedAt desc)[0...4] {
@@ -81,5 +81,17 @@ export const SIMILAR_PROPERTIES_QUERY = groq`
 `
 
 export const ALL_SLUGS_QUERY = groq`
-  *[_type == "property" && defined(slug.current) && status == "disponible"]{ "slug": slug.current }
+  *[_type == "property" && defined(slug.current) && status == "disponible" && published == true]{ "slug": slug.current }
+`
+
+export const SITE_SETTINGS_QUERY = groq`
+  *[_type == "siteSettings"][0] {
+    whatsappMain,
+    officeAddress,
+    officeHours,
+    email,
+    instagram,
+    facebook,
+    googleMapsEmbed
+  }
 `

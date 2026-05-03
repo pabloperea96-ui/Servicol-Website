@@ -73,13 +73,22 @@ export default defineType({
     }),
 
     defineField({
-      name: 'googleMapsEmbedUrl',
-      title: 'URL del mapa embebido (Google Maps)',
-      type: 'url',
+      name: 'googleMapsEmbed',
+      title: 'Mapa embebido (Google Maps)',
+      type: 'text',
+      rows: 4,
       description:
-        'URL del embed de Google Maps para mostrar la ubicación de la oficina en /contacto. Obtenerla desde Google Maps → Compartir → Incorporar un mapa → Copiar HTML → extraer solo el src="..."',
+        'Pega aquí el HTML completo del iframe de Google Maps. ' +
+        'Obtenerlo desde Google Maps → Compartir → Incorporar un mapa → Copiar HTML. ' +
+        'Ejemplo: <iframe src="https://www.google.com/maps/embed?..." width="600" height="450" ...></iframe>',
       validation: (Rule) =>
-        Rule.uri({ scheme: ['https'] }).error('Ingresa una URL válida con https://'),
+        Rule.custom((value: string | undefined) => {
+          if (!value) return true
+          if (!value.includes('<iframe') || !value.includes('google.com/maps/embed')) {
+            return 'Pega el HTML completo del iframe de Google Maps (debe contener <iframe y google.com/maps/embed)'
+          }
+          return true
+        }),
     }),
   ],
 

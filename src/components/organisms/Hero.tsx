@@ -1,8 +1,8 @@
 // src/components/organisms/Hero.tsx
-import SearchBar from '@/components/molecules/SearchBar'
+import SearchBar    from '@/components/molecules/SearchBar'
+import HeroHeadline from '@/components/atoms/HeroHeadline'
 
 type HeroProps = {
-  title?:       string
   subtitle?:    string
   imageSrc?:    string
   variant?:     'light' | 'dark'
@@ -10,8 +10,7 @@ type HeroProps = {
 }
 
 export default function Hero({
-  title    = 'Encuentra tu próximo hogar en Boyacá',
-  subtitle = 'Más de 25 años conectando familias con la propiedad ideal.',
+  subtitle    = 'Más de 25 años conectando familias con la propiedad ideal.',
   imageSrc,
   variant,
   searchProps,
@@ -33,14 +32,7 @@ export default function Hero({
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-10 px-5 text-center md:gap-16 md:px-20 lg:px-40">
         <div className="flex flex-col gap-6 max-w-[760px]">
-          <h1
-            className={[
-              'font-display text-display-2xl font-extrabold leading-[1.1] tracking-[-0.5px]',
-              isDark ? 'text-text-inverse' : 'text-text-primary',
-            ].join(' ')}
-          >
-            {title}
-          </h1>
+          <HeroHeadline isDark={isDark} />
           <p
             className={[
               'font-body text-body-lg font-light leading-relaxed',

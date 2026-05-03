@@ -1,5 +1,5 @@
 // src/app/nosotros/page.tsx — Server Component
-import Navigation from '@/components/organisms/Navigation'
+import NavigationWrapper from '@/components/organisms/NavigationWrapper'
 import Footer     from '@/components/organisms/Footer'
 import StatBlock  from '@/components/molecules/StatBlock'
 import TeamCard   from '@/components/molecules/TeamCard'
@@ -9,15 +9,15 @@ import Icon       from '@/components/atoms/Icon'
 const HERO = {
   title:       '25 años construyendo confianza en Boyacá',
   description:
-    'Servicol nació de la vocación de servicio y el profundo conocimiento del mercado inmobiliario. Hoy somos la inmobiliaria total de la región: venta, arriendo, administración.',
+    'Servicol nació de la vocación de servicio y el profundo conocimiento del mercado inmobiliario. Hoy somos la inmobiliaria número 1 de la región: venta, arriendo, administración.',
   imageSrc: '/images/nosotros-hero.jpg',
 }
 
 const STATS = [
-  { value: '25+',  label: 'Años de experiencia'  },
-  { value: '500+', label: 'Propiedades vendidas'  },
-  { value: '3',    label: 'Ciudades en Boyacá'    },
-  { value: '98%',  label: 'Clientes satisfechos'  },
+  { value: '25+',  label: 'Años de experiencia'    },
+  { value: '500+', label: 'Propiedades vendidas'   },
+  { value: '150+', label: 'Propiedades arrendadas' },
+  { value: '3',    label: 'Ciudades en Boyacá'     },
 ]
 
 const TEAM = [
@@ -30,7 +30,7 @@ const TEAM = [
 export default function NosotrosPage() {
   return (
     <>
-      <Navigation />
+      <NavigationWrapper />
 
       <main className="pt-[var(--nav-height)]">
 
