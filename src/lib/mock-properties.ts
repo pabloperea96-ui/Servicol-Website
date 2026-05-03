@@ -12,7 +12,7 @@ export type Property = {
   title:        string
   operation:    'venta' | 'arriendo'
   propertyType: 'apartamento' | 'casa' | 'local' | 'lote' | 'finca'
-  zone:         'duitama' | 'sogamoso' | 'paipa'
+  zone:         'duitama' | 'tibasosa' | 'paipa'
   price:        number
   area:         number
   bedrooms:     number
@@ -57,7 +57,7 @@ const DEFAULT_IMAGES = [
 ]
 
 const DEFAULT_DESC =
-  'Excelente inmueble ubicado en uno de los sectores más apetecidos del corredor Duitama–Sogamoso–Paipa. ' +
+  'Excelente inmueble ubicado en uno de los sectores más apetecidos del corredor Duitama–Tibasosa–Paipa. ' +
   'Cuenta con acabados de calidad, buena iluminación natural y distribución funcional que aprovecha al máximo cada espacio.\n\n' +
   'El sector ofrece fácil acceso a vías principales, comercio, colegios y centros de salud. ' +
   'Ideal para familias o como inversión en una zona de alta valorización en Boyacá.'
@@ -151,23 +151,23 @@ export const MOCK_PROPERTIES: Property[] = [
     },
   },
   {
-    slug:         'apartamento-moderno-sogamoso',
+    slug:         'apartamento-moderno-tibasosa',
     title:        'Apartamento Moderno',
     operation:    'venta',
     propertyType: 'apartamento',
-    zone:         'sogamoso',
+    zone:         'tibasosa',
     price:        195_000_000,
     area:         65,
     bedrooms:     2,
     bathrooms:    1,
     parking:      false,
-    location:     'Sogamoso, Boyacá',
-    address:      'Calle 11 N° 14-23, Urbanización Los Pinos, Sogamoso · Boyacá',
+    location:     'Tibasosa, Boyacá',
+    address:      'Calle 11 N° 14-23, Urbanización Los Pinos, Tibasosa · Boyacá',
     propertyCode: 'SVC-AP-25-003',
     floor:        3,
     stratum:      3,
     description:
-      'Moderno apartamento en Sogamoso con acabados contemporáneos y excelente relación precio-calidad. El inmueble es ideal para primera vivienda o inversión, con dos habitaciones bien proporcionadas y sala-comedor integrada a la cocina.\n\n' +
+      'Moderno apartamento en Tibasosa con acabados contemporáneos y excelente relación precio-calidad. El inmueble es ideal para primera vivienda o inversión, con dos habitaciones bien proporcionadas y sala-comedor integrada a la cocina.\n\n' +
       'La urbanización cuenta con zonas verdes y portería. El sector tiene fácil acceso a la Troncal Central del Norte y a los principales centros comerciales de la ciudad del Sol.',
     amenities: [
       'Cocina integral',
@@ -185,18 +185,18 @@ export const MOCK_PROPERTIES: Property[] = [
     advisor: DEFAULT_ADVISOR,
   },
   {
-    slug:         'apartamento-la-fuente-sogamoso',
+    slug:         'apartamento-la-fuente-tibasosa',
     title:        'Apartamento La Fuente',
     operation:    'arriendo',
     propertyType: 'apartamento',
-    zone:         'sogamoso',
+    zone:         'tibasosa',
     price:        1_500_000,
     area:         75,
     bedrooms:     3,
     bathrooms:    2,
     parking:      true,
-    location:     'Sogamoso, Boyacá',
-    address:      'Carrera 12 N° 9-55, Conjunto La Fuente, Sogamoso · Boyacá',
+    location:     'Tibasosa, Boyacá',
+    address:      'Carrera 12 N° 9-55, Conjunto La Fuente, Tibasosa · Boyacá',
     propertyCode: 'SVC-AP-25-004',
     floor:        5,
     stratum:      4,
@@ -265,18 +265,18 @@ export const MOCK_PROPERTIES: Property[] = [
     advisor:      DEFAULT_ADVISOR,
   },
   {
-    slug:         'casa-urbanizacion-sogamoso',
+    slug:         'casa-urbanizacion-tibasosa',
     title:        'Casa Urbanización El Nogal',
     operation:    'venta',
     propertyType: 'casa',
-    zone:         'sogamoso',
+    zone:         'tibasosa',
     price:        420_000_000,
     area:         150,
     bedrooms:     4,
     bathrooms:    3,
     parking:      true,
-    location:     'Sogamoso, Boyacá',
-    address:      'Manzana 5 Casa 12, Urbanización El Nogal, Sogamoso · Boyacá',
+    location:     'Tibasosa, Boyacá',
+    address:      'Manzana 5 Casa 12, Urbanización El Nogal, Tibasosa · Boyacá',
     propertyCode: 'SVC-CS-25-003',
     description:  DEFAULT_DESC,
     amenities:    DEFAULT_AMENITIES,
@@ -304,18 +304,18 @@ export const MOCK_PROPERTIES: Property[] = [
     advisor:      DEFAULT_ADVISOR,
   },
   {
-    slug:         'local-avenida-sogamoso',
+    slug:         'local-avenida-tibasosa',
     title:        'Local Comercial Avenida',
     operation:    'venta',
     propertyType: 'local',
-    zone:         'sogamoso',
+    zone:         'tibasosa',
     price:        250_000_000,
     area:         80,
     bedrooms:     0,
     bathrooms:    1,
     parking:      false,
-    location:     'Sogamoso, Boyacá',
-    address:      'Avenida Central N° 14-60, Local 101, Sogamoso · Boyacá',
+    location:     'Tibasosa, Boyacá',
+    address:      'Avenida Central N° 14-60, Local 101, Tibasosa · Boyacá',
     propertyCode: 'SVC-LC-25-002',
     description:  DEFAULT_DESC,
     amenities:    ['Vitrina esquinera', 'Baño privado', 'Mezzanine', 'Alta visibilidad'],
@@ -362,18 +362,18 @@ export const MOCK_PROPERTIES: Property[] = [
     advisor:      DEFAULT_ADVISOR,
   },
   {
-    slug:         'lote-rural-sogamoso',
+    slug:         'lote-rural-tibasosa',
     title:        'Lote Rural con Vista',
     operation:    'venta',
     propertyType: 'lote',
-    zone:         'sogamoso',
+    zone:         'tibasosa',
     price:        120_000_000,
     area:         800,
     bedrooms:     0,
     bathrooms:    0,
     parking:      false,
-    location:     'Sogamoso, Boyacá',
-    address:      'Vereda Morca, Sector Alto de la Cruz, Sogamoso · Boyacá',
+    location:     'Tibasosa, Boyacá',
+    address:      'Vereda Morca, Sector Alto de la Cruz, Tibasosa · Boyacá',
     propertyCode: 'SVC-LT-25-003',
     description:  DEFAULT_DESC,
     amenities:    ['Vista panorámica', 'Agua de nacimiento', 'Acceso carreteable'],
@@ -420,18 +420,18 @@ export const MOCK_PROPERTIES: Property[] = [
     advisor:      DEFAULT_ADVISOR,
   },
   {
-    slug:         'finca-descanso-sogamoso',
+    slug:         'finca-descanso-tibasosa',
     title:        'Finca de Descanso',
     operation:    'arriendo',
     propertyType: 'finca',
-    zone:         'sogamoso',
+    zone:         'tibasosa',
     price:        2_800_000,
     area:         2500,
     bedrooms:     3,
     bathrooms:    2,
     parking:      true,
-    location:     'Sogamoso, Boyacá',
-    address:      'Vereda Monquirá, Sector Los Cedros, Sogamoso · Boyacá',
+    location:     'Tibasosa, Boyacá',
+    address:      'Vereda Monquirá, Sector Los Cedros, Tibasosa · Boyacá',
     propertyCode: 'SVC-FI-25-003',
     description:  DEFAULT_DESC,
     amenities:    ['Piscina', 'Jardín', 'BBQ', 'Cocina equipada', 'Parqueadero'],

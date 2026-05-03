@@ -21,7 +21,8 @@ export type SanityProperty = {
   neighborhood: string
   location:     string
   featured:     boolean
-  status:       string
+  status:       'disponible' | 'arrendado' | 'vendido' | 'retirado'
+  published:    boolean
   mainImageUrl: string | null
   mainImageAlt: string | null
   // Solo en ficha de detalle
@@ -30,8 +31,8 @@ export type SanityProperty = {
   amenities?:   string[]
   floor?:       number
   stratum?:     number
-  coordinates?: { lat: number; lng: number }
-  address?:     string
+  address?:          string
+  googleMapsEmbed?:  string | null
   gallery?:     { url: string; alt: string; caption?: string }[]
   advisor?: {
     name:      string
@@ -41,11 +42,23 @@ export type SanityProperty = {
   }
 }
 
+// ─── Tipo para el singleton siteSettings ─────────────────────────────────────
+
+export type SiteSettings = {
+  whatsappMain:       string
+  officeAddress:      string
+  officeHours:        string
+  email:              string
+  instagram:          string | null
+  facebook:           string | null
+  googleMapsEmbed:    string | null
+}
+
 // ─── Mapeo de zone granular → zona simple para filtros URL ───────────────────
 
 export function mapZone(zone: string): string {
   if (zone.startsWith('duitama')) return 'duitama'
-  return zone // sogamoso, paipa, santa-rosa
+  return zone // tibasosa, paipa, santa-rosa
 }
 
 // ─── Mapeo de propertyType Sanity → valor del filtro URL ────────────────────

@@ -4,6 +4,7 @@
 import React, { useState } from 'react'
 import { X } from 'lucide-react'
 import Icon from '@/components/atoms/Icon'
+import { useFilterCount } from '@/lib/useFilterCount'
 
 type MobileFilterDrawerProps = {
   children: React.ReactNode
@@ -12,6 +13,7 @@ type MobileFilterDrawerProps = {
 export default function MobileFilterDrawer({ children }: MobileFilterDrawerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const close = () => setIsOpen(false)
+  const count = useFilterCount()
 
   // Inyecta onApply={close} al hijo para que cada filtro cierre el drawer
   const panel = React.isValidElement<{ onApply?: () => void }>(children)
@@ -28,6 +30,11 @@ export default function MobileFilterDrawer({ children }: MobileFilterDrawerProps
       >
         <Icon type="Filter" size={16} />
         Filtrar
+        {count > 0 && (
+          <span className="flex size-5 items-center justify-center rounded-full bg-action-cta text-text-inverse font-body text-[10px] font-bold leading-none">
+            {count}
+          </span>
+        )}
       </button>
 
       {/* Drawer — solo cuando está abierto */}

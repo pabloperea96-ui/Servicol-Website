@@ -11,7 +11,7 @@ export type FilterParams = {
   precioMax?:    string
   areaMin?:      string
   areaMax?:      string
-  zona?:         string  // comma-separated: "duitama,sogamoso"
+  zona?:         string  // comma-separated: "duitama,tibasosa"
   pagina?:       string
   orden?:        string  // 'recientes' | 'precio-asc' | 'precio-desc'
 }

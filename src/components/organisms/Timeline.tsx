@@ -9,9 +9,9 @@ type TimelineProps = {
 
 const DEFAULT_ITEMS: TimelineItem[] = [
   { year: '1998', description: 'Fundación de Servicol en Duitama. Inicio de operaciones con venta y arriendo de inmuebles residenciales.' },
-  { year: '2005', description: 'Expansión hacia Sogamoso y Paipa. Apertura de la unidad de administración de propiedades.' },
+  { year: '2005', description: 'Expansión hacia Tibasosa y Paipa. Apertura de la unidad de administración de propiedades.' },
   { year: '2015', description: 'Lanzamiento de la primera alianza con constructoras para proyectos sobre planos en Boyacá.' },
-  { year: '2024', description: 'Más de 500 propiedades gestionadas y presencia consolidada en el corredor Duitama – Sogamoso – Paipa.' },
+  { year: '2024', description: 'Más de 500 propiedades gestionadas y presencia consolidada en el corredor Duitama – Tibasosa – Paipa.' },
 ]
 
 export default function Timeline({ items = DEFAULT_ITEMS, className }: TimelineProps) {

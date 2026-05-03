@@ -70,7 +70,7 @@ export default defineType({
           { title: 'Duitama Norte', value: 'duitama-norte' },
           { title: 'Duitama Sur', value: 'duitama-sur' },
           { title: 'Paipa', value: 'paipa' },
-          { title: 'Sogamoso', value: 'sogamoso' },
+          { title: 'Tibasosa', value: 'tibasosa' },
           { title: 'Santa Rosa de Viterbo', value: 'santa-rosa' },
         ],
         layout: 'radio',
@@ -296,6 +296,15 @@ export default defineType({
     }),
 
     defineField({
+      name: 'published',
+      title: 'Publicado en el sitio',
+      type: 'boolean',
+      group: 'contact',
+      description: 'Activa para mostrar este proyecto en el sitio. Puedes cargarlo completo sin publicarlo todavía.',
+      initialValue: false,
+    }),
+
+    defineField({
       name: 'featured',
       title: 'Destacar en Home',
       type: 'boolean',
@@ -317,24 +326,26 @@ export default defineType({
 
   preview: {
     select: {
-      title: 'title',
-      status: 'status',
+      title:         'title',
+      status:        'status',
+      published:     'published',
       startingPrice: 'startingPrice',
-      media: 'mainImage',
+      media:         'mainImage',
     },
-    prepare({ title, status, startingPrice, media }) {
+    prepare({ title, status, published, startingPrice, media }) {
       const statusLabels: Record<string, string> = {
-        'en-planos': 'En planos',
+        'en-planos':       'En planos',
         'en-construccion': 'En construcción',
-        'entregado': 'Entregado',
+        'entregado':       'Entregado',
       }
-      const statusLabel = statusLabels[status] ?? status
+      const statusLabel    = statusLabels[status] ?? status
       const priceFormatted = startingPrice
         ? `$${startingPrice.toLocaleString('es-CO')}`
         : 'Sin precio'
+      const draftLabel = published ? '' : ' · 🚫 No publicado'
       return {
         title,
-        subtitle: `${statusLabel} · Desde ${priceFormatted}`,
+        subtitle: `${statusLabel} · Desde ${priceFormatted}${draftLabel}`,
         media,
       }
     },

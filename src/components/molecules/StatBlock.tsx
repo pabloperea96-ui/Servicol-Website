@@ -35,7 +35,7 @@ export default function StatBlock({ stats = DEFAULT_STATS, className }: StatBloc
           <p className="font-display text-display-2xl font-bold text-text-primary tracking-[-0.3px]">
             {stat.value}
           </p>
-          <p className="font-body text-[12px] text-text-muted text-center leading-[17px]">
+          <p className="text-body-md text-text-muted text-center">
             {stat.label}
           </p>
         </div>

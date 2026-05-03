@@ -23,12 +23,6 @@ const DEFAULT_SERVICES: Service[] = [
     href: '/servicios#arriendo',
   },
   {
-    title: 'Administración',
-    description: 'Administramos tu propiedad para que recibas tus ingresos sin preocupaciones.',
-    features: ['Recaudo de arriendos', 'Mantenimiento', 'Informes mensuales'],
-    href: '/servicios#administracion',
-  },
-  {
     title: 'Proyectos nuevos',
     description: 'Accede a proyectos sobre planos con los mejores precios de preventa.',
     features: ['Renders y planos', 'Avance de obra', 'Financiación directa'],

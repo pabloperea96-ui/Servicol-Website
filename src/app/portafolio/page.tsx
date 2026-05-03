@@ -1,6 +1,6 @@
 // src/app/portafolio/page.tsx — Server Component
 import { Suspense }             from 'react'
-import Navigation              from '@/components/organisms/Navigation'
+import NavigationWrapper        from '@/components/organisms/NavigationWrapper'
 import Footer                  from '@/components/organisms/Footer'
 import PortfolioLayout         from '@/components/organisms/PortfolioLayout'
 import Breadcrumb              from '@/components/molecules/Breadcrumb'
@@ -10,6 +10,8 @@ import CategoryBar             from '@/components/molecules/CategoryBar'
 import MobilePropertyList      from '@/components/molecules/MobilePropertyList'
 import MobileFilterDrawer      from '@/components/molecules/MobileFilterDrawer'
 import ActiveFiltersBar        from '@/components/molecules/ActiveFiltersBar'
+import SortSelect             from '@/components/molecules/SortSelect'
+import FilterCountPill        from '@/components/molecules/FilterCountPill'
 import { client }              from '@/sanity/lib/client'
 import { ALL_PROPERTIES_QUERY } from '@/lib/queries'
 import { filterProperties }    from '@/lib/filter-properties'
@@ -39,7 +41,7 @@ export default async function PortfolioPage({
 
   return (
     <>
-      <Navigation />
+      <NavigationWrapper />
 
       <main className="pt-[var(--nav-height)]">
 
@@ -62,11 +64,22 @@ export default async function PortfolioPage({
           <Suspense fallback={null}>
             <PortfolioLayout
               properties={cardItems}
+              totalCount={totalCount}
               totalPages={0}
               currentPage={currentPage}
               sidebar={
                 <Suspense fallback={null}>
                   <FilterPanel />
+                </Suspense>
+              }
+              filterPill={
+                <Suspense fallback={null}>
+                  <FilterCountPill />
+                </Suspense>
+              }
+              sortControl={
+                <Suspense fallback={null}>
+                  <SortSelect />
                 </Suspense>
               }
             />
@@ -82,17 +95,27 @@ export default async function PortfolioPage({
 
         {/* Mobile layout — < md */}
         <div className="md:hidden px-5 py-8 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <p className="font-body text-body-md text-text-muted">
               {totalCount} {totalCount === 1 ? 'propiedad' : 'propiedades'}
             </p>
-            <Suspense fallback={null}>
-              <MobileFilterDrawer>
-                <FilterPanel />
-              </MobileFilterDrawer>
-            </Suspense>
+            <div className="flex items-center gap-2">
+              <Suspense fallback={null}>
+                <SortSelect />
+              </Suspense>
+              <Suspense fallback={null}>
+                <MobileFilterDrawer>
+                  <FilterPanel />
+                </MobileFilterDrawer>
+              </Suspense>
+            </div>
           </div>
-          <MobilePropertyList properties={allCardItems} />
+          <div className="flex flex-col gap-6">
+            <Suspense fallback={null}>
+              <FilterCountPill />
+            </Suspense>
+            <MobilePropertyList properties={allCardItems} />
+          </div>
         </div>
 
       </main>

@@ -36,7 +36,7 @@ export default defineType({
       options: {
         list: [
           { title: 'Duitama', value: 'duitama' },
-          { title: 'Sogamoso', value: 'sogamoso' },
+          { title: 'Tibasosa', value: 'tibasosa' },
           { title: 'Paipa', value: 'paipa' },
           { title: 'Santa Rosa', value: 'santa-rosa' },
           { title: 'Otro', value: 'otro' },

@@ -10,19 +10,25 @@ type Property = ComponentProps<typeof PropertyCard>
 
 type PortfolioLayoutProps = {
   properties:    Property[]
+  totalCount?:   number
   totalPages?:   number
   currentPage?:  number
   onPageChange?: (page: number) => void
   sidebar?:      React.ReactNode
+  filterPill?:   React.ReactNode
+  sortControl?:  React.ReactNode
   className?:    string
 }
 
 export default function PortfolioLayout({
   properties,
+  totalCount,
   totalPages  = 1,
   currentPage = 1,
   onPageChange = () => {},
   sidebar,
+  filterPill,
+  sortControl,
   className,
 }: PortfolioLayoutProps) {
   return (
@@ -38,10 +44,16 @@ export default function PortfolioLayout({
       {/* Main content */}
       <div className="flex flex-1 flex-col gap-6 min-w-0">
 
-        {/* Toolbar — solo contador */}
-        <p className="font-body text-body-md text-text-secondary">
-          {properties.length} {properties.length === 1 ? 'propiedad' : 'propiedades'}
-        </p>
+        {/* Toolbar — contador + filtros aplicados + orden */}
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <p className="font-body text-body-md text-text-secondary">
+              {(totalCount ?? properties.length)} {(totalCount ?? properties.length) === 1 ? 'propiedad' : 'propiedades'}
+            </p>
+            {filterPill}
+          </div>
+          {sortControl}
+        </div>
 
         {/* Grid fijo */}
         <PropertyGrid properties={properties} layout="grid" />

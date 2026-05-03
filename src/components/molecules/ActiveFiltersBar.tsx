@@ -28,7 +28,7 @@ const LABELS: Record<string, Record<string, string>> = {
   },
   zona: {
     duitama:  'Duitama',
-    sogamoso: 'Sogamoso',
+    tibasosa: 'Tibasosa',
     paipa:    'Paipa',
   },
 }
@@ -42,6 +42,19 @@ export default function ActiveFiltersBar() {
   type Pill = { key: string; value: string; label: string }
   const pills: Pill[] = []
 
+  // Precio — pill único para el rango completo
+  const precioMin = searchParams.get('precioMin')
+  const precioMax = searchParams.get('precioMax')
+  if (precioMin || precioMax) {
+    const fmt = (v: string) => `$ ${Number(v).toLocaleString('es-CO')}`
+    const label = precioMin && precioMax
+      ? `${fmt(precioMin)} – ${fmt(precioMax)}`
+      : precioMin
+        ? `Desde ${fmt(precioMin)}`
+        : `Hasta ${fmt(precioMax!)}`
+    pills.push({ key: 'precio', value: 'rango', label })
+  }
+
   for (const [key, map] of Object.entries(LABELS)) {
     const raw = searchParams.get(key)
     if (!raw) continue
@@ -53,7 +66,10 @@ export default function ActiveFiltersBar() {
 
   function remove(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString())
-    if (MULTI.has(key)) {
+    if (key === 'precio') {
+      params.delete('precioMin')
+      params.delete('precioMax')
+    } else if (MULTI.has(key)) {
       const updated = (params.get(key) ?? '').split(',').filter(v => v !== value).join(',')
       if (updated) params.set(key, updated)
       else         params.delete(key)

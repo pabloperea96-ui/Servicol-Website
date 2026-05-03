@@ -21,7 +21,7 @@ type NavigationProps = {
 
 export default function Navigation({
   transparent = false,
-  whatsappUrl = 'https://wa.me/573112345678',
+  whatsappUrl,
 }: NavigationProps) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
@@ -81,18 +81,20 @@ export default function Navigation({
 
       {/* CTA desktop + hamburger mobile (NavDrawer autónomo) */}
       <div className="flex flex-1 items-center justify-end gap-4">
-        <Button
-          as="a"
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="cta"
-          size="sm"
-          icon={<Icon type="WhatsApp" size={16} aria-hidden={false} />}
-          className="hidden md:inline-flex"
-        >
-          WhatsApp
-        </Button>
+        {whatsappUrl && (
+          <Button
+            as="a"
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="cta"
+            size="sm"
+            icon={<Icon type="WhatsApp" size={16} aria-hidden={false} />}
+            className="hidden md:inline-flex"
+          >
+            WhatsApp
+          </Button>
+        )}
 
         {/* NavDrawer incluye el botón hamburger y su propio estado */}
         <NavDrawer iconClass={logoColor} />
