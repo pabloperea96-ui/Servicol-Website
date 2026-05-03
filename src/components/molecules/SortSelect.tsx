@@ -23,14 +23,15 @@ export default function SortSelect() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <select
         value={current}
         onChange={handleChange}
         aria-label="Ordenar resultados"
+        suppressHydrationWarning
         className={[
           'appearance-none cursor-pointer',
-          'min-w-[180px] bg-bg-surface rounded-md px-4 py-3 pr-9',
+          'w-full bg-bg-surface rounded-md px-4 py-3 pr-9',
           'font-body text-body-md text-text-primary',
           'border border-border-default',
           'focus:outline-none focus:border-[1.5px] focus:border-action-primary',

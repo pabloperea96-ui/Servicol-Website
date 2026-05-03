@@ -221,6 +221,7 @@ export default function FilterPanel({ onApply }: FilterPanelProps) {
             onBlur={() => handlePrecioBlur('precioMin')}
             className={inputClass}
             aria-label="Precio mínimo"
+            suppressHydrationWarning
           />
           <input
             type="text"
@@ -231,6 +232,7 @@ export default function FilterPanel({ onApply }: FilterPanelProps) {
             onBlur={() => handlePrecioBlur('precioMax')}
             className={inputClass}
             aria-label="Precio máximo"
+            suppressHydrationWarning
           />
         </div>
       </div>

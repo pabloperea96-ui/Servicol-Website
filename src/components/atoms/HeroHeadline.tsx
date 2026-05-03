@@ -70,7 +70,7 @@ export default function HeroHeadline({ isDark = false }: Props) {
   return (
     <h1 className={[
       'font-display font-extrabold leading-[1.1] tracking-[-0.5px]',
-      'text-display-md md:text-display-2xl',
+      'text-display-xl md:text-display-2xl',
       textColor,
     ].join(' ')}>
 
@@ -92,7 +92,7 @@ export default function HeroHeadline({ isDark = false }: Props) {
       </span>
 
       {/* Línea 1 */}
-      <span className="block whitespace-nowrap">
+      <span className="block md:whitespace-nowrap">
         Encuentra tu {adj}{' '}
         <span
           className="relative inline-block overflow-hidden"
@@ -105,8 +105,13 @@ export default function HeroHeadline({ isDark = false }: Props) {
           aria-atomic="true"
         >
           <span
-            className="block whitespace-nowrap text-action-cta"
-            style={{ animation: animStyle }}
+            className="block whitespace-nowrap"
+            style={{
+              animation: animStyle,
+              color: isDark
+                ? 'var(--color-action-cta-light)'
+                : 'var(--color-action-cta)',
+            }}
           >
             {word}
           </span>

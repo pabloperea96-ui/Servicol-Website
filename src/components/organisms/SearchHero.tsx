@@ -14,5 +14,5 @@ export default function SearchHero() {
     router.push(`/portafolio?${params.toString()}`)
   }
 
-  return <Hero variant="light" searchProps={{ onSearch: handleSearch }} />
+  return <Hero imageSrc="/images/hero-bg.jpg" searchProps={{ onSearch: handleSearch }} />
 }

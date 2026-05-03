@@ -95,20 +95,20 @@ export default async function PortfolioPage({
 
         {/* Mobile layout — < md */}
         <div className="md:hidden px-5 py-8 flex flex-col gap-4">
-          <div className="flex items-center justify-between gap-3">
-            <p className="font-body text-body-md text-text-muted">
+          <div className="flex items-center gap-2">
+            <p className="font-body text-body-md text-text-muted shrink-0">
               {totalCount} {totalCount === 1 ? 'propiedad' : 'propiedades'}
             </p>
-            <div className="flex items-center gap-2">
-              <Suspense fallback={null}>
+            <Suspense fallback={null}>
+              <div className="flex-1 min-w-0">
                 <SortSelect />
-              </Suspense>
-              <Suspense fallback={null}>
-                <MobileFilterDrawer>
-                  <FilterPanel />
-                </MobileFilterDrawer>
-              </Suspense>
-            </div>
+              </div>
+            </Suspense>
+            <Suspense fallback={null}>
+              <MobileFilterDrawer>
+                <FilterPanel />
+              </MobileFilterDrawer>
+            </Suspense>
           </div>
           <div className="flex flex-col gap-6">
             <Suspense fallback={null}>

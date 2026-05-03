@@ -50,6 +50,7 @@ function NativeSelect({
       onInput={e => onChange((e.target as HTMLSelectElement).value)}
       className="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0"
       aria-label={label}
+      suppressHydrationWarning
     >
       <option value="" disabled hidden>{placeholder}</option>
       {options.map(o => (

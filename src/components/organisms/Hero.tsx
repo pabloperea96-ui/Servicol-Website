@@ -10,7 +10,7 @@ type HeroProps = {
 }
 
 export default function Hero({
-  subtitle    = 'Más de 25 años conectando familias con la propiedad ideal.',
+  subtitle,
   imageSrc,
   variant,
   searchProps,
@@ -22,25 +22,37 @@ export default function Hero({
       {/* Background */}
       <div className="absolute inset-0">
         {imageSrc ? (
-          <img src={imageSrc} alt="" className="size-full object-cover" aria-hidden />
+          <div
+            aria-hidden
+            className="hero-bg absolute inset-0"
+            style={{ backgroundImage: `url('${imageSrc}')` }}
+          />
         ) : (
           <div className={`size-full ${isDark ? 'bg-bg-subtle' : 'hero-pattern'}`} />
         )}
-        {isDark && <div className="absolute inset-0 bg-black/30" aria-hidden />}
+        {imageSrc && (
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{ background: 'rgba(0,0,0,0.55)' }}
+          />
+        )}
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-10 px-5 text-center md:gap-16 md:px-20 lg:px-40">
-        <div className="flex flex-col gap-6 max-w-[760px]">
+      <div className="relative z-10 w-full flex flex-col items-center gap-10 px-4 text-center md:gap-16 md:px-20 lg:px-40">
+        <div className="w-full flex flex-col gap-6 md:max-w-[760px]">
           <HeroHeadline isDark={isDark} />
-          <p
-            className={[
-              'font-body text-body-lg font-light leading-relaxed',
-              isDark ? 'text-text-inverse/90' : 'text-text-secondary',
-            ].join(' ')}
-          >
-            {subtitle}
-          </p>
+          {subtitle && (
+            <p
+              className={[
+                'font-body text-body-lg font-light leading-relaxed',
+                isDark ? 'text-text-inverse/90' : 'text-text-secondary',
+              ].join(' ')}
+            >
+              {subtitle}
+            </p>
+          )}
         </div>
         <div className="w-full max-w-[720px]">
           <SearchBar {...searchProps} />

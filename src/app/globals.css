@@ -729,6 +729,22 @@ body {
 
 }
 
+@keyframes kenBurns {
+  from { transform: scale(1.0); }
+  to   { transform: scale(1.08); }
+}
+
+.hero-bg {
+  background-size: cover;
+  background-position: center;
+  animation: kenBurns 12s ease-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg { animation: none; }
+}
+
 @keyframes hero-word-exit {
   from { opacity: 1; transform: translateY(0);    }
   to   { opacity: 0; transform: translateY(-8px); }
