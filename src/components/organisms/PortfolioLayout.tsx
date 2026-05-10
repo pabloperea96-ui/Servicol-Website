@@ -52,7 +52,9 @@ export default function PortfolioLayout({
             </p>
             {filterPill}
           </div>
-          {sortControl}
+          <div className="w-[200px] shrink-0">
+            {sortControl}
+          </div>
         </div>
 
         {/* Grid fijo */}
