@@ -60,6 +60,8 @@
   --font-size-body-lg: 16px;
   --font-size-body-md: 14px;
   --font-size-label: 11px;
+  --font-size-card-price: 20px;
+  --font-size-card-spec:  11px;
 
   /* Motion durations */
   --duration-fast: 120ms;
@@ -83,6 +85,8 @@
     --font-size-display-md: 20px;
     --font-size-display-sm: 17px;
     --font-size-body-lg: 18px;
+    --font-size-card-price: 22px;
+    --font-size-card-spec:  12px;
   }
 }
 
@@ -103,6 +107,8 @@
     --font-size-display-sm: 18px;
     --font-size-body-lg: 24px;
     --font-size-body-md: 16px;
+    --font-size-card-price: 24px;
+    --font-size-card-spec:  13px;
   }
 }
 
@@ -357,6 +363,22 @@ body {
     font-size: 11px;
     font-weight: 400;
     line-height: 11px;
+    letter-spacing: 0;
+  }
+
+  .text-card-price {
+    font-family: var(--font-display);
+    font-size: var(--font-size-card-price);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+
+  .text-card-spec {
+    font-family: var(--font-body);
+    font-size: var(--font-size-card-spec);
+    font-weight: 400;
+    line-height: 1;
     letter-spacing: 0;
   }
 

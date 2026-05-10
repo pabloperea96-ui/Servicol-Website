@@ -28,20 +28,20 @@ function formatCOP(n: number) {
 function Specs({ area, bedrooms, bathrooms, location }: Pick<PropertyCardProps, 'area' | 'bedrooms' | 'bathrooms' | 'location'>) {
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-1">
-      <span className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
+      <span className="flex items-center gap-1 text-card-spec text-text-secondary">
         <Icon type="Area" size={14} /> {area} m²
       </span>
       {bedrooms > 0 && (
-        <span className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
+        <span className="flex items-center gap-1 text-card-spec text-text-secondary">
           <Icon type="Bed" size={14} /> {bedrooms} hab
         </span>
       )}
       {bathrooms > 0 && (
-        <span className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
+        <span className="flex items-center gap-1 text-card-spec text-text-secondary">
           <Icon type="Bath" size={14} /> {bathrooms} {bathrooms === 1 ? 'baño' : 'baños'}
         </span>
       )}
-      <span className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
+      <span className="flex items-center gap-1 text-card-spec text-text-secondary">
         <Icon type="Pin" size={14} /> {location}
       </span>
     </div>
@@ -73,7 +73,7 @@ export default function PropertyCard({
   const info = (
     <>
       <h3 className="font-display text-display-sm font-semibold text-text-primary">{title}</h3>
-      <p className="font-display text-[20px] font-bold text-action-cta">{formatCOP(price)}</p>
+      <p className="text-card-price text-action-cta">{formatCOP(price)}</p>
       <Specs area={area} bedrooms={bedrooms} bathrooms={bathrooms} location={location} />
     </>
   )
