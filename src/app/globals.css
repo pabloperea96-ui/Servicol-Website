@@ -107,8 +107,8 @@
     --font-size-display-sm: 18px;
     --font-size-body-lg: 24px;
     --font-size-body-md: 16px;
-    --font-size-card-price: 24px;
-    --font-size-card-spec:  13px;
+    --font-size-card-price: 26px;
+    --font-size-card-spec:  14px;
   }
 }
 
@@ -370,7 +370,7 @@ body {
     font-family: var(--font-display);
     font-size: var(--font-size-card-price);
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1;
     letter-spacing: 0;
   }
 

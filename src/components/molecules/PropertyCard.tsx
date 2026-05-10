@@ -27,22 +27,23 @@ function formatCOP(n: number) {
 
 function Specs({ area, bedrooms, bathrooms, location }: Pick<PropertyCardProps, 'area' | 'bedrooms' | 'bathrooms' | 'location'>) {
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-1">
-      <span className="flex items-center gap-1 text-card-spec text-text-secondary">
+    <div className="flex gap-x-4 overflow-hidden">
+      <span className="flex items-center gap-1 text-card-spec text-text-secondary shrink-0">
         <Icon type="Area" size={14} /> {area} m²
       </span>
       {bedrooms > 0 && (
-        <span className="flex items-center gap-1 text-card-spec text-text-secondary">
+        <span className="flex items-center gap-1 text-card-spec text-text-secondary shrink-0">
           <Icon type="Bed" size={14} /> {bedrooms} hab
         </span>
       )}
       {bathrooms > 0 && (
-        <span className="flex items-center gap-1 text-card-spec text-text-secondary">
+        <span className="flex items-center gap-1 text-card-spec text-text-secondary shrink-0">
           <Icon type="Bath" size={14} /> {bathrooms} {bathrooms === 1 ? 'baño' : 'baños'}
         </span>
       )}
-      <span className="flex items-center gap-1 text-card-spec text-text-secondary">
-        <Icon type="Pin" size={14} /> {location}
+      <span className="flex items-center gap-1 text-card-spec text-text-secondary min-w-0">
+        <Icon type="Pin" size={14} className="shrink-0" />
+        <span className="truncate">{location}</span>
       </span>
     </div>
   )
