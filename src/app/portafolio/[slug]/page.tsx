@@ -1,4 +1,5 @@
 // src/app/portafolio/[slug]/page.tsx — Server Component
+import type { Metadata } from 'next'
 import { notFound }   from 'next/navigation'
 import Link           from 'next/link'
 import NavigationWrapper from '@/components/organisms/NavigationWrapper'
@@ -14,6 +15,7 @@ import PropertyMap    from '@/components/molecules/PropertyMap'
 import { client }     from '@/sanity/lib/client'
 import {
   PROPERTY_BY_SLUG_QUERY,
+  PROPERTY_METADATA_QUERY,
   SIMILAR_PROPERTIES_QUERY,
   ALL_SLUGS_QUERY,
 }                     from '@/lib/queries'
@@ -30,6 +32,57 @@ export const revalidate = 60
 export async function generateStaticParams() {
   const slugs = await client.fetch<{ slug: string }[]>(ALL_SLUGS_QUERY)
   return slugs.map(s => ({ slug: s.slug }))
+}
+
+type PropertyMeta = {
+  title: string
+  propertyType: string
+  operation: 'venta' | 'arriendo'
+  price: number | null
+  area: number | null
+  zone: string
+  mainImageUrl: string | null
+}
+
+function zoneLabel(zone: string): string {
+  if (zone.startsWith('duitama')) return 'Duitama'
+  if (zone === 'santa-rosa') return 'Santa Rosa'
+  return zone.charAt(0).toUpperCase() + zone.slice(1)
+}
+
+function typeLabel(propertyType: string): string {
+  if (propertyType === 'local-oficina') return 'Local'
+  return propertyType.charAt(0).toUpperCase() + propertyType.slice(1)
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const p: PropertyMeta | null = await client.fetch(PROPERTY_METADATA_QUERY, { slug })
+  if (!p) return {}
+
+  const type = typeLabel(p.propertyType)
+  const op   = p.operation === 'venta' ? 'en Venta' : 'en Arriendo'
+  const zone = zoneLabel(p.zone)
+  const title = `${type} ${op} en ${zone}`
+  const areaStr = p.area ? `de ${p.area}m² ` : ''
+  const description = p.price
+    ? `${type} ${areaStr}${op} en ${zone} por $${p.price.toLocaleString('es-CO')}. Contáctanos en Servicol.`
+    : `${type} ${areaStr}${op} en ${zone}. Contáctanos en Servicol.`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: p.mainImageUrl ? [{ url: p.mainImageUrl }] : [],
+      type: 'website',
+    },
+  }
 }
 
 type CardProps = ComponentProps<typeof PropertyCard>

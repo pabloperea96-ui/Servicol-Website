@@ -1,4 +1,5 @@
 // src/app/nosotros/page.tsx — Server Component
+import type { Metadata } from 'next'
 import NavigationWrapper from '@/components/organisms/NavigationWrapper'
 import Footer     from '@/components/organisms/Footer'
 import StatBlock  from '@/components/molecules/StatBlock'
@@ -26,6 +27,12 @@ const TEAM = [
   { name: 'Ana Rodríguez', role: 'Asesora comercial',   initials: 'AR', whatsappUrl: 'https://wa.me/573112345680' },
   { name: 'Luis Torres',   role: 'Director comercial',  initials: 'LT', whatsappUrl: 'https://wa.me/573112345681' },
 ]
+
+export const metadata: Metadata = {
+  title: 'Quiénes somos',
+  description:
+    'Conoce al equipo de Servicol: más de 25 años acompañando a familias y empresas en sus decisiones inmobiliarias en Boyacá.',
+}
 
 export default function NosotrosPage() {
   return (

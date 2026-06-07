@@ -1,4 +1,5 @@
 // src/app/portafolio/page.tsx — Server Component
+import type { Metadata } from 'next'
 import { Suspense }             from 'react'
 import NavigationWrapper        from '@/components/organisms/NavigationWrapper'
 import Footer                  from '@/components/organisms/Footer'
@@ -19,6 +20,12 @@ import { toCardProps }         from '@/lib/sanity-mappers'
 import type { SanityProperty } from '@/lib/sanity-mappers'
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: 'Portafolio de propiedades',
+  description:
+    'Explora casas, apartamentos, lotes y locales en venta y arriendo en Duitama, Paipa, Tibasosa y Sogamoso.',
+}
 
 const BREADCRUMB = [
   { label: 'Inicio',     href: '/'         },
@@ -48,6 +55,9 @@ export default async function PortfolioPage({
         {/* Section header */}
         <div className="border-b border-border-default px-5 pt-8 pb-3 flex flex-col gap-5 md:px-12 md:pt-10">
           <Breadcrumb items={BREADCRUMB} />
+          <h1 className="text-display-md text-text-primary font-display font-bold">
+            Portafolio de propiedades
+          </h1>
           {/* Pills de tipo + filtros activos — solo mobile */}
           <div className="md:hidden flex flex-col gap-3">
             <Suspense fallback={<div className="h-8" />}>

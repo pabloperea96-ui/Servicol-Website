@@ -1,3 +1,4 @@
+import type { Metadata }      from 'next'
 import { client }             from '@/sanity/lib/client'
 import { SITE_SETTINGS_QUERY } from '@/lib/queries'
 import type { SiteSettings }   from '@/lib/sanity-mappers'
@@ -8,6 +9,12 @@ import ContactInfoRow          from '@/components/molecules/ContactInfoRow'
 import ContactoForm            from './ContactoForm'
 
 export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'Contacto',
+  description:
+    'Escríbenos por WhatsApp o visítanos en nuestra oficina en Duitama, Boyacá. Respondemos de lunes a sábado.',
+}
 
 export default async function ContactoPage() {
   const settings: SiteSettings | null = await client.fetch(SITE_SETTINGS_QUERY)

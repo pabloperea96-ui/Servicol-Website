@@ -2,3 +2,28 @@ User-agent: *
 Disallow: /studio/
 Disallow: /test-tap/
 Allow: /
+
+# AI search crawlers — allowed to index and cite content
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# Training-only crawlers — blocked (Common Crawl)
+User-agent: CCBot
+Disallow: /
+
+Sitemap: https://servicolinmobiliaria.com/sitemap.xml

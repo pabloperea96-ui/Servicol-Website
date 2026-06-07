@@ -1,4 +1,5 @@
 // src/app/servicios/page.tsx — Server Component
+import type { Metadata } from 'next'
 import Link             from 'next/link'
 import NavigationWrapper from '@/components/organisms/NavigationWrapper'
 import Footer            from '@/components/organisms/Footer'
@@ -34,6 +35,12 @@ const SERVICES = [
     href:        'https://wa.me/573112345678?text=Hola%2C%20me%20interesa%20conocer%20los%20proyectos%20nuevos',
   },
 ]
+
+export const metadata: Metadata = {
+  title: 'Servicios inmobiliarios',
+  description:
+    'Ofrecemos compraventa, arriendo, avalúos y administración de inmuebles en la región de Boyacá.',
+}
 
 export default function ServiciosPage() {
   return (

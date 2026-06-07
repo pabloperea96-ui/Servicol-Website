@@ -84,6 +84,19 @@ export const ALL_SLUGS_QUERY = groq`
   *[_type == "property" && defined(slug.current) && status == "disponible" && published == true]{ "slug": slug.current }
 `
 
+export const PROPERTY_METADATA_QUERY = groq`
+  *[_type == "property" && slug.current == $slug && defined(slug)][0] {
+    title,
+    propertyType,
+    operation,
+    price,
+    "area": builtArea,
+    zone,
+    "slug": slug.current,
+    "mainImageUrl": mainImage.asset->url
+  }
+`
+
 export const SITE_SETTINGS_QUERY = groq`
   *[_type == "siteSettings"][0] {
     whatsappMain,
