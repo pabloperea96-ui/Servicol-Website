@@ -17,6 +17,7 @@ npm run dev      # start dev server (default port 3000)
 npm run build    # production build
 npm run lint     # ESLint
 npm run start    # serve production build
+npx sanity typegen generate   # regenerate TypeScript types from Sanity schema
 ```
 
 To test on a phone on the same LAN: the dev server already allows `192.168.1.4` via `allowedDevOrigins` in `next.config.ts`. Run `npm run dev` and open that IP from the phone.
@@ -58,7 +59,11 @@ All property data comes from Sanity. The flow is always:
 
 Every page that fetches from Sanity must export `export const revalidate = 60` (ISR, 60s).
 
-The portfolio page fetches **all** available properties server-side and applies `filterProperties()` (`src/lib/filter-properties.ts`) based on URL `searchParams`. Filtering is not done in Sanity — it runs in the server component on the full dataset.
+The portfolio page fetches **all** available properties server-side and applies `filterProperties()` (`src/lib/filter-properties.ts`) based on URL `searchParams`. Filtering is not done in Sanity — it runs in the server component on the full dataset. Pagination uses the `pagina` URL param; `filterProperties()` returns both the paginated `items` slice and the full `allItems` array (used by the mobile layout to render all results at once rather than paginating).
+
+The portfolio page uses **dual layout rendering**: `hidden md:block` for desktop (paginated `PropertyGrid`) and `md:hidden` for mobile (`MobilePropertyList` with the full unsliced dataset). Both are rendered server-side; CSS hides one at each breakpoint.
+
+Sanity image URLs are built via `src/sanity/lib/image.ts` (wraps `@sanity/image-url`). Prefer this helper over raw `asset->url` when you need resizing or format options.
 
 The Sanity Studio is embedded at `/studio/[[...tool]]` via `src/sanity/sanity.config.ts`.
 
@@ -97,7 +102,7 @@ Font families are injected via CSS variables: `var(--font-display)` (Figtree), `
 
 ### Spacing & layout
 
-Responsive contextual tokens that change at `md` (768px) and `lg` (1024px):
+Responsive contextual tokens (change at `md` 768px and `xl` 1440px — `xl` is the desktop breakpoint for this project, not `lg`):
 
 ```
 --section-y   --section-x   --card-padding   --card-gap   --nav-height   --content-max
@@ -156,6 +161,25 @@ Atoms → Molecules → Organisms → Pages. Never build an Organism before its 
 
 ---
 
+## SEO layer
+
+Each page exports its own `metadata` object (`title`, `description`). The root layout (`src/app/layout.tsx`) sets global defaults. Structured data (JSON-LD) is injected inline via `<script type="application/ld+json">` in page Server Components — do not use a third-party library for this.
+
+`src/app/sitemap.ts` generates the XML sitemap dynamically — it fetches all published property slugs from Sanity at build/revalidate time.
+
+---
+
+## Conversion rules (WhatsApp CTAs)
+
+The North Star metric is WhatsApp conversations initiated. These rules are non-negotiable:
+
+- The WhatsApp button must be **always visible**: floating on mobile, in the nav and property detail on desktop.
+- Every property detail page must have a WhatsApp CTA **above the fold**.
+- The advisor assigned to a property must appear in the detail with a direct link to their own WhatsApp number (built in `toAdvisor()` in `sanity-mappers.ts`).
+- Contact forms send data as a pre-formatted `wa.me/` URL — there is no backend form handler in this phase.
+
+---
+
 ## Hard rules
 
 - App Router only — never Pages Router
@@ -165,6 +189,7 @@ Atoms → Molecules → Organisms → Pages. Never build an Organism before its 
 - No `!important` in styles
 - Every page must be tested on mobile before it is considered done
 - All Sanity-fetching pages must export `revalidate = 60`
+- Client components go in the route directory (e.g., `src/app/contacto/ContactoForm.tsx`) or in `components/` — never promoted to Server Components without adding `"use client"` to that file only
 
 ---
 
