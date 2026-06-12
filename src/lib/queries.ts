@@ -97,6 +97,26 @@ export const PROPERTY_METADATA_QUERY = groq`
   }
 `
 
+export const TESTIMONIALS_QUERY = groq`
+  *[_type == "testimonial" && featured == true] | order(_createdAt desc) {
+    _id,
+    quote,
+    "name": clientName,
+    city,
+    rating,
+  }
+`
+
+export const ADVISORS_QUERY = groq`
+  *[_type == "advisor"] | order(_createdAt asc) {
+    _id,
+    name,
+    role,
+    whatsapp,
+    "photoUrl": photo.asset->url,
+  }
+`
+
 export const SITE_SETTINGS_QUERY = groq`
   *[_type == "siteSettings"][0] {
     whatsappMain,

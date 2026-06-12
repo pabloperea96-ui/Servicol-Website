@@ -23,7 +23,7 @@ function formatCOP(n: number) {
 function AgentBlock({ advisor }: { advisor: Advisor }) {
   return (
     <div className="flex items-center gap-2">
-      <Avatar initials={advisor.initials} size="md" />
+      <Avatar src={advisor.photoUrl} initials={advisor.initials} size="md" alt={advisor.name} />
       <div>
         <p className="font-display text-[16px] font-semibold leading-[17px] text-text-primary">
           {advisor.name}
@@ -72,8 +72,8 @@ export default function PriceInfoBar({ price, operation, advisor, propertyCode, 
         className="md:hidden flex flex-col gap-4 overflow-hidden rounded-lg border border-border-default bg-bg-surface"
         style={{ padding: '24px 16px' }}
       >
-        <div>
-          <p className="font-body text-[12px] leading-[17px] text-text-primary">
+        <div className="flex flex-col gap-1">
+          <p className="text-body-md text-text-primary">
             {priceLabel}
           </p>
           <p className="font-display text-display-xl font-bold text-action-cta">
@@ -93,8 +93,8 @@ export default function PriceInfoBar({ price, operation, advisor, propertyCode, 
 
       {/* ── Desktop ────────────────────────────────────────── */}
       <div className="hidden md:flex items-center gap-4 overflow-hidden rounded-lg border border-border-default bg-bg-surface px-4 py-6">
-        <div className="flex-1">
-          <p className="font-body text-[12px] leading-[17px] text-text-primary">
+        <div className="flex-1 flex flex-col gap-1">
+          <p className="text-body-md text-text-primary">
             {priceLabel}
           </p>
           <p className="font-display text-display-2xl font-extrabold tracking-tight text-action-cta">

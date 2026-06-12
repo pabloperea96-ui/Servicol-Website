@@ -105,6 +105,55 @@ export function toAdvisor(
     role:        raw.role,
     initials:    computeInitials(raw.name),
     whatsappUrl: `https://wa.me/${raw.whatsapp}?text=Hola%2C+me+interesa+una+propiedad+de+Servicol${propertyTitle ? `%3A+${encodeURIComponent(propertyTitle)}` : ''}`,
+    photoUrl:    raw.photoUrl ?? undefined,
+  }
+}
+
+// ─── SanityAdvisor → TeamCard props ──────────────────────────────────────────
+
+export type SanityAdvisor = {
+  _id:      string
+  name:     string
+  role:     string
+  whatsapp: string
+  photoUrl: string | null
+}
+
+export function toTeamCard(a: SanityAdvisor) {
+  return {
+    name:        a.name,
+    role:        a.role,
+    initials:    computeInitials(a.name),
+    photoSrc:    a.photoUrl ?? undefined,
+    whatsappUrl: a.whatsapp
+      ? `https://wa.me/${a.whatsapp}?text=Hola%2C+me+gustar%C3%ADa+hablar+con+un+asesor+de+Servicol`
+      : undefined,
+  }
+}
+
+// ─── SanityTestimonial → TestimonialCard props ───────────────────────────────
+
+export type SanityTestimonial = {
+  _id:    string
+  quote:  string
+  name:   string
+  city:   string
+  rating: number
+}
+
+const CITY_LABELS: Record<string, string> = {
+  'duitama':    'Duitama',
+  'tibasosa':   'Tibasosa',
+  'paipa':      'Paipa',
+  'santa-rosa': 'Santa Rosa',
+}
+
+export function toTestimonialCard(t: SanityTestimonial) {
+  return {
+    quote:  t.quote,
+    name:   t.name,
+    role:   CITY_LABELS[t.city],
+    rating: t.rating,
   }
 }
 

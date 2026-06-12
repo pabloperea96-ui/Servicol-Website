@@ -5,6 +5,7 @@ export type Advisor = {
   role:        string
   initials:    string
   whatsappUrl: string
+  photoUrl?:   string
 }
 
 export type Property = {

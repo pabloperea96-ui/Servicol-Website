@@ -20,7 +20,7 @@ npm run start    # serve production build
 npx sanity typegen generate   # regenerate TypeScript types from Sanity schema
 ```
 
-To test on a phone on the same LAN: the dev server already allows `192.168.1.4` via `allowedDevOrigins` in `next.config.ts`. Run `npm run dev` and open that IP from the phone.
+To test on a phone on the same LAN: the dev server already allows `192.168.0.29` via `allowedDevOrigins` in `next.config.ts`. Run `npm run dev` and open that IP from the phone. Update the IP in `next.config.ts` if your LAN address differs.
 
 There is no test runner.
 
@@ -59,13 +59,34 @@ All property data comes from Sanity. The flow is always:
 
 Every page that fetches from Sanity must export `export const revalidate = 60` (ISR, 60s).
 
-The portfolio page fetches **all** available properties server-side and applies `filterProperties()` (`src/lib/filter-properties.ts`) based on URL `searchParams`. Filtering is not done in Sanity — it runs in the server component on the full dataset. Pagination uses the `pagina` URL param; `filterProperties()` returns both the paginated `items` slice and the full `allItems` array (used by the mobile layout to render all results at once rather than paginating).
+The portfolio page fetches **all** available properties server-side and applies `filterProperties()` (`src/lib/filter-properties.ts`) based on URL `searchParams`. Filtering is not done in Sanity — it runs in the server component on the full dataset. `ITEMS_PER_PAGE = 8` (constant in `filter-properties.ts`). Pagination uses the `pagina` URL param; `filterProperties()` returns both the paginated `items` slice and the full `allItems` array (used by the mobile layout to render all results at once rather than paginating).
 
 The portfolio page uses **dual layout rendering**: `hidden md:block` for desktop (paginated `PropertyGrid`) and `md:hidden` for mobile (`MobilePropertyList` with the full unsliced dataset). Both are rendered server-side; CSS hides one at each breakpoint.
 
 Sanity image URLs are built via `src/sanity/lib/image.ts` (wraps `@sanity/image-url`). Prefer this helper over raw `asset->url` when you need resizing or format options.
 
 The Sanity Studio is embedded at `/studio/[[...tool]]` via `src/sanity/sanity.config.ts`.
+
+### NavigationWrapper pattern
+
+Pages never import `Navigation` directly. Always use `NavigationWrapper` (`src/components/organisms/NavigationWrapper.tsx`) — it is an async Server Component that fetches `siteSettings` to resolve the WhatsApp URL, then renders `Navigation`. Pass `transparent` when needed (e.g. Hero pages).
+
+### Suspense requirement for filter components
+
+`FilterPanel`, `SortSelect`, `CategoryBar`, `FilterCountPill`, `ActiveFiltersBar`, and `MobileFilterDrawer` are Client Components that call `useSearchParams()`. They must always be wrapped in `<Suspense>` when used inside a Server Component, or Next.js will throw at build time.
+
+### Other lib utilities
+
+- `src/lib/parseMapEmbed.ts` — `parseMapSrc(embedHtml)` extracts the `src` URL from a raw Google Maps `<iframe>` embed string (stored in Sanity).
+- `src/lib/useFilterCount.ts` — `useFilterCount()` counts how many URL filter params are active; used by `FilterCountPill` to show the badge number.
+
+### Property detail page (`/portafolio/[slug]`)
+
+Uses `generateStaticParams()` to pre-build all published slugs at deploy time (via `ALL_SLUGS_QUERY`). Falls through to `notFound()` if a slug is missing or the property is not `disponible + published`.
+
+### Environment variables
+
+`NEXT_PUBLIC_BASE_URL` — used in `layout.tsx` as `metadataBase` (falls back to `https://servicolinmobiliaria.com`). Set this in `.env.local` for local development if you need accurate OG/sitemap URLs.
 
 ---
 

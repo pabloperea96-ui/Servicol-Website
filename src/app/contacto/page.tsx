@@ -33,10 +33,11 @@ export default async function ContactoPage() {
         <section className="bg-bg-subtle px-5 py-16 md:px-20 md:py-24">
           <div className="flex flex-col items-center gap-4 text-center">
             <h1 className="font-display text-display-lg font-bold tracking-tight text-text-primary md:text-display-xl">
-              Escríbenos
+              Aquí empieza{' '}
+              <span className="text-action-cta">tu historia en Boyacá</span>
             </h1>
             <p className="font-body text-body-md font-light text-text-secondary md:text-body-lg">
-              Nuestros expertos te ayudarán a encontrar lo que buscas
+              Tu próxima propiedad empieza con una conversación.
             </p>
           </div>
         </section>
@@ -46,7 +47,7 @@ export default async function ContactoPage() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-6">
 
             {/* Form column */}
-            <ContactoForm whatsappNumber={settings?.whatsappMain ?? ''} />
+            <ContactoForm />
 
             {/* Info + Map column */}
             <div className="flex flex-col gap-6">

@@ -25,22 +25,7 @@ type FormState = {
 
 const INITIAL: FormState = { nombre: '', telefono: '', correo: '', tipo: '', mensaje: '' }
 
-function buildWhatsAppMessage(data: FormState): string {
-  const tipoLabel = SEARCH_OPTIONS.find(o => o.value === data.tipo)?.label ?? '—'
-  const lines = [
-    `Hola, mi nombre es ${data.nombre}.`,
-    '',
-    `📞 Teléfono: ${data.telefono || '—'}`,
-    `📧 Correo: ${data.correo || '—'}`,
-    `🎯 Interés: ${tipoLabel}`,
-    '',
-    'Mensaje:',
-    data.mensaje.trim(),
-  ]
-  return encodeURIComponent(lines.join('\n'))
-}
-
-export default function ContactoForm({ whatsappNumber }: { whatsappNumber: string }) {
+export default function ContactoForm() {
   const [form, setForm]           = useState<FormState>(INITIAL)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError]         = useState('')
@@ -50,7 +35,7 @@ export default function ContactoForm({ whatsappNumber }: { whatsappNumber: strin
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
       setForm(prev => ({ ...prev, [field]: e.target.value }))
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!form.nombre.trim() || !form.mensaje.trim()) {
       setError('El nombre y el mensaje son obligatorios.')
@@ -61,8 +46,18 @@ export default function ContactoForm({ whatsappNumber }: { whatsappNumber: strin
       return
     }
     setError('')
-    setSubmitted(true)
-    window.open(`https://wa.me/${whatsappNumber}?text=${buildWhatsAppMessage(form)}`, '_blank')
+
+    try {
+      const res = await fetch('/api/contacto', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error('Error al enviar')
+      setSubmitted(true)
+    } catch {
+      setError('No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos por WhatsApp.')
+    }
   }
 
   return (
@@ -79,10 +74,10 @@ export default function ContactoForm({ whatsappNumber }: { whatsappNumber: strin
       {submitted ? (
         <div className="flex flex-col gap-3 rounded-lg border border-action-cta bg-action-cta-light p-6">
           <p className="font-display text-display-sm font-bold text-action-cta">
-            ¡Mensaje listo!
+            ¡Mensaje enviado!
           </p>
           <p className="font-body text-body-md text-text-secondary">
-            Te redirigimos a WhatsApp con tu mensaje pre-rellenado. Si no se abrió, revisa los permisos de popups del navegador.
+            Recibimos tu mensaje. Un asesor de Servicol te responderá en menos de 24 horas.
           </p>
           <button
             type="button"

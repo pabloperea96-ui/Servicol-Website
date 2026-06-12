@@ -18,13 +18,14 @@ import {
   PROPERTY_METADATA_QUERY,
   SIMILAR_PROPERTIES_QUERY,
   ALL_SLUGS_QUERY,
+  SITE_SETTINGS_QUERY,
 }                     from '@/lib/queries'
 import {
   toCardProps,
   toAdvisor,
   toImageUrls,
 }                     from '@/lib/sanity-mappers'
-import type { SanityProperty } from '@/lib/sanity-mappers'
+import type { SanityProperty, SiteSettings } from '@/lib/sanity-mappers'
 import type { ComponentProps } from 'react'
 
 export const revalidate = 60
@@ -116,10 +117,10 @@ export default async function PropertyDetailPage({
   )
   if (!property || property.status !== 'disponible') notFound()
 
-  const similarRaw: SanityProperty[] = await client.fetch(
-    SIMILAR_PROPERTIES_QUERY,
-    { propertyType: property.propertyType, slug },
-  )
+  const [similarRaw, settings] = await Promise.all([
+    client.fetch<SanityProperty[]>(SIMILAR_PROPERTIES_QUERY, { propertyType: property.propertyType, slug }),
+    client.fetch<SiteSettings | null>(SITE_SETTINGS_QUERY),
+  ])
 
   // Completar hasta 4 con propiedades de otro tipo si no hay suficientes
   let similar = similarRaw
@@ -140,7 +141,15 @@ export default async function PropertyDetailPage({
   // Deduplicar por slug como red de seguridad
   similar = similar.filter((p, i, arr) => arr.findIndex(q => q.slug === p.slug) === i)
 
-  const advisor     = toAdvisor(property.advisor, property.title)
+  const advisor         = toAdvisor(property.advisor, property.title)
+  const effectiveAdvisor = advisor ?? (settings?.whatsappMain
+    ? {
+        name:        'Servicol Inmobiliaria',
+        role:        'Asesor disponible',
+        initials:    'SI',
+        whatsappUrl: `https://wa.me/${settings.whatsappMain}?text=Hola%2C+me+interesa+una+propiedad+de+Servicol%3A+${encodeURIComponent(property.title)}`,
+      }
+    : null)
   const images      = toImageUrls(property)
   const mobileSpecs = buildSpecs(property, 4)
   const desktopSpecs = buildSpecs(property, 6)
@@ -191,13 +200,13 @@ export default async function PropertyDetailPage({
 
           <ImageGallery images={images} title={property.title} />
 
-          {advisor && (
+          {effectiveAdvisor && (
             <PriceInfoBar
               price={property.price}
               operation={property.operation}
-              advisor={advisor}
+              advisor={effectiveAdvisor}
               propertyCode={property.code ?? '—'}
-              whatsappUrl={advisor.whatsappUrl}
+              whatsappUrl={effectiveAdvisor.whatsappUrl}
             />
           )}
 
