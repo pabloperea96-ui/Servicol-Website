@@ -23,7 +23,7 @@ import {
 import {
   toCardProps,
   toAdvisor,
-  toImageUrls,
+  toMediaItems,
 }                     from '@/lib/sanity-mappers'
 import type { SanityProperty, SiteSettings } from '@/lib/sanity-mappers'
 import type { ComponentProps } from 'react'
@@ -150,7 +150,7 @@ export default async function PropertyDetailPage({
         whatsappUrl: `https://wa.me/${settings.whatsappMain}?text=Hola%2C+me+interesa+una+propiedad+de+Servicol%3A+${encodeURIComponent(property.title)}`,
       }
     : null)
-  const images      = toImageUrls(property)
+  const images      = toMediaItems(property)
   const mobileSpecs = buildSpecs(property, 4)
   const desktopSpecs = buildSpecs(property, 6)
   const address     = property.address ?? property.location
@@ -198,7 +198,7 @@ export default async function PropertyDetailPage({
             </div>
           </div>
 
-          <ImageGallery images={images} title={property.title} />
+          <ImageGallery media={images} title={property.title} />
 
           {effectiveAdvisor && (
             <PriceInfoBar

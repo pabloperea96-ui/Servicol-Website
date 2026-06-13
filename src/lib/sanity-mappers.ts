@@ -33,7 +33,10 @@ export type SanityProperty = {
   stratum?:     number
   address?:          string
   googleMapsEmbed?:  string | null
-  gallery?:     { url: string; alt: string; caption?: string }[]
+  gallery?: Array<
+    | { mediaType: 'image';  url: string | null; alt: string | null; caption: string | null }
+    | { mediaType: 'video';  url: string | null; thumbnailUrl: string | null; caption: string | null }
+  >
   advisor?: {
     name:      string
     role:      string
@@ -157,11 +160,38 @@ export function toTestimonialCard(t: SanityTestimonial) {
   }
 }
 
-// ─── Gallery → array de URLs para ImageGallery ───────────────────────────────
+// ─── Tipo de ítem de galería (imagen o video) ────────────────────────────────
 
-export function toImageUrls(p: SanityProperty): string[] {
+export type MediaItem =
+  | { mediaType: 'image'; url: string; alt: string; caption?: string }
+  | { mediaType: 'video'; url: string; thumbnailUrl?: string; caption?: string }
+
+// ─── Gallery → MediaItem[] para ImageGallery ─────────────────────────────────
+
+export function toMediaItems(p: SanityProperty): MediaItem[] {
   if (p.gallery && p.gallery.length > 0) {
-    return p.gallery.map(g => g.url).filter((u): u is string => Boolean(u))
+    const result: MediaItem[] = []
+    for (const g of p.gallery) {
+      if (!g.mediaType || !g.url) continue
+      if (g.mediaType === 'image') {
+        result.push({
+          mediaType: 'image',
+          url:       g.url,
+          alt:       g.alt ?? '',
+          ...(g.caption ? { caption: g.caption } : {}),
+        })
+      } else if (g.mediaType === 'video') {
+        result.push({
+          mediaType: 'video',
+          url:       g.url,
+          ...(g.thumbnailUrl ? { thumbnailUrl: g.thumbnailUrl } : {}),
+          ...(g.caption      ? { caption: g.caption }           : {}),
+        })
+      }
+    }
+    return result
   }
-  return p.mainImageUrl ? [p.mainImageUrl] : []
+  return p.mainImageUrl
+    ? [{ mediaType: 'image', url: p.mainImageUrl, alt: p.title }]
+    : []
 }
