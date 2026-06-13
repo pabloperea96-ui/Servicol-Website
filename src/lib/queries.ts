@@ -56,9 +56,18 @@ export const PROPERTY_BY_SLUG_QUERY = groq`
     "address": neighborhood + ", " + ${cityFromZone},
     googleMapsEmbed,
     "gallery": gallery[]{
-      "url":     asset->url,
-      "alt":     alt,
-      caption
+      _type == "image" => {
+        "mediaType": "image",
+        "url":       asset->url,
+        "alt":       alt,
+        caption
+      },
+      _type == "videoItem" => {
+        "mediaType":    "video",
+        "url":          video.asset->url,
+        "thumbnailUrl": thumbnail.asset->url,
+        caption
+      }
     },
     advisor-> {
       name,
