@@ -116,8 +116,8 @@ export default defineType({
         'En pesos colombianos (COP). Para arriendo, ingresa el canon mensual.',
       validation: (Rule) =>
         Rule.required()
-          .min(1000000)
-          .error('El precio debe ser mayor a $1.000.000 COP'),
+          .min(100000)
+          .error('El precio debe ser mayor a $100.000 COP'),
     }),
 
     defineField({
