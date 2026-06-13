@@ -1,8 +1,6 @@
 import { Resend }       from 'resend'
 import { NextRequest, NextResponse } from 'next/server'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 const TIPO_LABELS: Record<string, string> = {
   comprar:           'Comprar una propiedad',
   arrendar:          'Arrendar una propiedad',
@@ -20,6 +18,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Faltan campos obligatorios.' }, { status: 400 })
   }
 
+  const resend = new Resend(process.env.RESEND_API_KEY)
   const { error } = await resend.emails.send({
     from:    `Servicol Inmobiliaria <${process.env.RESEND_FROM_EMAIL}>`,
     to:      process.env.RESEND_TO_EMAIL!,
