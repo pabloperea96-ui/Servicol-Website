@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactCompiler: false,
   allowedDevOrigins: ['192.168.0.29'],
-  eslint: { ignoreDuringBuilds: true },
   async headers() {
     return [
       {
