@@ -55,7 +55,8 @@ Commits del branch: `0f24e51` (feature base), `43f8398` (fixes), `19a11a7` (card
 ## 2. Decisiones de diseño
 
 - **El precio "Desde" no aparece en la barra del detalle.** Mostraba el precio global junto a
-  los precios por tipología y confundía. Los precios viven solo en las cards de Tipologías.
+  los precios por tipología y confundía. Los precios viven solo en las cards de
+  "Tipos de propiedad".
   El `startingPrice` sigue usándose en la card de la lista y en la meta description de SEO.
 - **La card de proyecto es 100% clickeable**, sin botones "Ver Proyecto"/"Contactar" ni
   divider. El contacto por WhatsApp vive en el detalle (barra de info) y en el CTA del final.
@@ -85,7 +86,7 @@ después de publicar).
 | Descripción (`description`) | texto | requerido, 50–2000 caracteres | Sección "Descripción" del detalle (cada salto de línea crea un párrafo) |
 | Estado (`status`) | radio: En planos / En construcción / Entregado | requerido | Badge de color en el detalle y texto SEO ("sobre planos", "en construcción", "entregado") |
 | Precio desde (`startingPrice`) | número COP | requerido, mínimo $1.000.000 | Card de la lista ("Desde $X") y meta description. **No** aparece en la barra del detalle |
-| Tipologías (`unitTypes`) | lista de objetos | mínimo 1; cada una exige nombre, área, habitaciones, baños y precio | Cards de la sección "Tipologías disponibles" del detalle |
+| Tipos de propiedad (`unitTypes`) | lista de objetos | mínimo 1; cada una exige nombre, área, habitaciones, baños y precio | Cards de la sección "Tipos de propiedad" del detalle |
 
 ### Pestaña "Progreso de obra"
 

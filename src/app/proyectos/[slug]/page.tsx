@@ -182,11 +182,11 @@ export default async function ProjectDetailPage({
             />
           )}
 
-          {/* Tipologías */}
+          {/* Tipos de propiedad */}
           {project.unitTypes && project.unitTypes.length > 0 && (
             <section className="flex flex-col gap-4">
               <h2 className="font-display text-display-md font-extrabold md:text-display-lg md:font-bold">
-                Tipologías disponibles
+                Tipos de propiedad
               </h2>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 {project.unitTypes.map(unit => (
