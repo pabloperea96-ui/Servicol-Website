@@ -1,3 +1,5 @@
+'use client'
+
 // src/components/molecules/ProjectCard.tsx
 import Link from 'next/link'
 import Badge from '@/components/atoms/Badge'
