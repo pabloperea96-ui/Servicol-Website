@@ -22,7 +22,9 @@ npx sanity typegen generate   # regenerate TypeScript types from Sanity schema
 
 To test on a phone on the same LAN: the dev server already allows `192.168.0.29` via `allowedDevOrigins` in `next.config.ts`. Run `npm run dev` and open that IP from the phone. Update the IP in `next.config.ts` if your LAN address differs.
 
-There is no test runner.
+There is no test runner. `/test-tap` is a throwaway page for verifying touch events on iPhone — not linked from anywhere.
+
+Note: Next.js 16's `NextConfig` type no longer accepts an `eslint` option (e.g. `ignoreDuringBuilds`) — fix lint errors instead of trying to suppress them in `next.config.ts`.
 
 ---
 
@@ -45,6 +47,7 @@ There is no test runner.
 |---|---|
 | Business context and user goals | `docs/context.md` |
 | Page structure and routes | `docs/PRD.md` |
+| History of notable changes | `docs/CHANGELOG.md` |
 
 ---
 
@@ -54,8 +57,10 @@ All property data comes from Sanity. The flow is always:
 
 1. **GROQ query** — defined in `src/lib/queries.ts`, exported as named constants
 2. **Sanity client** — `src/sanity/lib/client.ts` (CDN enabled, `apiVersion: 2024-01-01`)
-3. **Type + transform** — `src/lib/sanity-mappers.ts` defines `SanityProperty`, `SiteSettings`, and mapper functions (`toCardProps`, `toAdvisor`, `toImageUrls`, `mapZone`, `mapPropertyType`)
+3. **Type + transform** — `src/lib/sanity-mappers.ts` defines `SanityProperty`, `SiteSettings`, `MediaItem`, and mapper functions (`toCardProps`, `toAdvisor`, `toMediaItems`, `toTeamCard`, `toTestimonialCard`, `mapZone`, `mapPropertyType`)
 4. **Page Server Component** — fetches, maps, passes typed props to organism/molecule components
+
+Despite its name, `src/lib/mock-properties.ts` is still the home of the shared `Advisor` and `Property` types that `sanity-mappers.ts` and some components import — don't delete it as "dead mock data" without moving those types first.
 
 Every page that fetches from Sanity must export `export const revalidate = 60` (ISR, 60s).
 
@@ -64,6 +69,8 @@ The portfolio page fetches **all** available properties server-side and applies 
 The portfolio page uses **dual layout rendering**: `hidden md:block` for desktop (paginated `PropertyGrid`) and `md:hidden` for mobile (`MobilePropertyList` with the full unsliced dataset). Both are rendered server-side; CSS hides one at each breakpoint.
 
 Sanity image URLs are built via `src/sanity/lib/image.ts` (wraps `@sanity/image-url`). Prefer this helper over raw `asset->url` when you need resizing or format options.
+
+The property gallery is **mixed media**: `toMediaItems()` returns a `MediaItem[]` discriminated union (`mediaType: 'image' | 'video'`). Video items carry a file URL, an optional thumbnail, and an optional caption. Any component rendering the gallery must handle both variants.
 
 The Sanity Studio is embedded at `/studio/[[...tool]]` via `src/sanity/sanity.config.ts`.
 
@@ -84,9 +91,16 @@ Pages never import `Navigation` directly. Always use `NavigationWrapper` (`src/c
 
 Uses `generateStaticParams()` to pre-build all published slugs at deploy time (via `ALL_SLUGS_QUERY`). Falls through to `notFound()` if a slug is missing or the property is not `disponible + published`.
 
+### API route: `/api/contacto`
+
+The only API route. `POST src/app/api/contacto/route.ts` receives the contact form payload and sends an email via Resend. It is called from `src/app/contacto/ContactoForm.tsx` with `fetch('/api/contacto')`.
+
+**Gotcha:** instantiate `new Resend(...)` *inside* the handler, never at module scope — module-scope instantiation reads the env var at build time and breaks the Vercel build when the key isn't available.
+
 ### Environment variables
 
-`NEXT_PUBLIC_BASE_URL` — used in `layout.tsx` as `metadataBase` (falls back to `https://servicolinmobiliaria.com`). Set this in `.env.local` for local development if you need accurate OG/sitemap URLs.
+- `NEXT_PUBLIC_BASE_URL` — used in `layout.tsx` as `metadataBase` (falls back to `https://servicolinmobiliaria.com`). Set in `.env.local` if you need accurate OG/sitemap URLs locally.
+- `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `RESEND_TO_EMAIL` — used only by `/api/contacto`.
 
 ---
 
@@ -157,6 +171,8 @@ Defined in `src/sanity/schemas/`. Key document types:
 - `status`: `disponible | arrendado | vendido | retirado` — only `disponible + published == true` records appear on the site
 - `published` / `featured`: booleans that gate visibility
 - `advisor`: reference to `advisor` document (name, role, whatsapp, photo)
+- `price`: validated `min(100000)` — minimum $100.000 COP
+- `gallery`: array of images **and** `videoItem` objects (video file + optional thumbnail + caption)
 
 **`advisor`** — team member / agent  
 **`project`** — new-construction projects  
@@ -197,7 +213,7 @@ The North Star metric is WhatsApp conversations initiated. These rules are non-n
 - The WhatsApp button must be **always visible**: floating on mobile, in the nav and property detail on desktop.
 - Every property detail page must have a WhatsApp CTA **above the fold**.
 - The advisor assigned to a property must appear in the detail with a direct link to their own WhatsApp number (built in `toAdvisor()` in `sanity-mappers.ts`).
-- Contact forms send data as a pre-formatted `wa.me/` URL — there is no backend form handler in this phase.
+- The contact form (`/contacto`) posts to `/api/contacto`, which emails the lead via Resend. All other CTAs remain direct `wa.me/` links — do not add more backend form handlers without discussing it first.
 
 ---
 
