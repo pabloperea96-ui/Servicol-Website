@@ -8,9 +8,8 @@ import CTASection     from '@/components/organisms/CTASection'
 import Breadcrumb     from '@/components/molecules/Breadcrumb'
 import Badge          from '@/components/atoms/Badge'
 import ImageGallery   from '@/components/molecules/ImageGallery'
-import PriceInfoBar   from '@/components/molecules/PriceInfoBar'
 import ProjectCard    from '@/components/molecules/ProjectCard'
-import ProjectProgress from '@/components/molecules/ProjectProgress'
+import ProjectInfoBar from '@/components/molecules/ProjectInfoBar'
 import UnitTypeCard   from '@/components/molecules/UnitTypeCard'
 import { client }     from '@/sanity/lib/client'
 import {
@@ -27,7 +26,7 @@ import {
   computeInitials,
 }                     from '@/lib/sanity-mappers'
 import type { SanityProject, SiteSettings } from '@/lib/sanity-mappers'
-import { formatCOP, formatMonthYear } from '@/lib/formatPrice'
+import { formatCOP } from '@/lib/formatPrice'
 
 export const revalidate = 60
 
@@ -173,31 +172,14 @@ export default async function ProjectDetailPage({
 
           {media.length > 0 && <ImageGallery media={media} title={project.title} />}
 
-          {effectiveAdvisor && (
-            <PriceInfoBar
-              price={project.startingPrice}
-              priceLabel="Desde"
+          {effectiveAdvisor && project.startDate && project.estimatedDelivery && (
+            <ProjectInfoBar
+              progressPct={project.progressPct}
+              startDate={project.startDate}
+              estimatedDelivery={project.estimatedDelivery}
               advisor={effectiveAdvisor}
-              meta={project.estimatedDelivery
-                ? { label: 'Entrega estimada', value: formatMonthYear(project.estimatedDelivery) }
-                : undefined}
-              ctaLabel="Contactar"
               whatsappUrl={effectiveAdvisor.whatsappUrl}
             />
-          )}
-
-          {/* Avance de obra */}
-          {project.startDate && project.estimatedDelivery && (
-            <section className="flex flex-col gap-4">
-              <h2 className="font-display text-display-md font-extrabold md:text-display-lg md:font-bold">
-                Avance de obra
-              </h2>
-              <ProjectProgress
-                progressPct={project.progressPct}
-                startDate={project.startDate}
-                estimatedDelivery={project.estimatedDelivery}
-              />
-            </section>
           )}
 
           {/* Tipologías */}

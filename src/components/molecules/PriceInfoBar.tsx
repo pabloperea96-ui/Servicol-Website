@@ -6,18 +6,14 @@ import type { Advisor } from '@/lib/mock-properties'
 import { formatCOP } from '@/lib/formatPrice'
 
 type Props = {
-  price:         number
-  advisor:       Advisor
-  whatsappUrl:   string
-  operation?:    'venta' | 'arriendo'
-  propertyCode?: string
-  // Overrides para fichas que no son de propiedad (p. ej. proyectos)
-  priceLabel?:   string
-  meta?:         { label: string; value: string }
-  ctaLabel?:     string
+  price:        number
+  operation:    'venta' | 'arriendo'
+  advisor:      Advisor
+  propertyCode: string
+  whatsappUrl:  string
 }
 
-function AgentBlock({ advisor }: { advisor: Advisor }) {
+export function AgentBlock({ advisor }: { advisor: Advisor }) {
   return (
     <div className="flex items-center gap-2">
       <Avatar src={advisor.photoUrl} initials={advisor.initials} size="md" alt={advisor.name} />
@@ -33,26 +29,21 @@ function AgentBlock({ advisor }: { advisor: Advisor }) {
   )
 }
 
-function MetaBlock({ label, value }: { label: string; value: string }) {
+function CodeBlock({ propertyCode }: { propertyCode: string }) {
   return (
     <div className="flex flex-col gap-1">
       <p className="font-display text-[16px] font-semibold leading-[17px] text-text-primary">
-        {label}
+        Código inmueble
       </p>
       <p className="font-body text-[12px] leading-[12px] text-text-muted">
-        {value}
+        {propertyCode}
       </p>
     </div>
   )
 }
 
-export default function PriceInfoBar({
-  price, advisor, whatsappUrl, operation, propertyCode, priceLabel, meta, ctaLabel,
-}: Props) {
-  const resolvedPriceLabel =
-    priceLabel ?? (operation === 'arriendo' ? 'Canon mensual' : 'Precio de venta')
-  const resolvedMeta =
-    meta ?? (propertyCode ? { label: 'Código inmueble', value: propertyCode } : null)
+export default function PriceInfoBar({ price, operation, advisor, propertyCode, whatsappUrl }: Props) {
+  const priceLabel = operation === 'venta' ? 'Precio de venta' : 'Canon mensual'
 
   const cta = (
     <Button
@@ -63,7 +54,7 @@ export default function PriceInfoBar({
       variant="cta"
       className="w-full md:w-auto"
     >
-      {ctaLabel ?? 'Agendar cita'}
+      Agendar cita
     </Button>
   )
 
@@ -76,7 +67,7 @@ export default function PriceInfoBar({
       >
         <div className="flex flex-col gap-1">
           <p className="text-body-md text-text-primary">
-            {resolvedPriceLabel}
+            {priceLabel}
           </p>
           <p className="font-display text-display-xl font-bold text-action-cta">
             {formatCOP(price)}
@@ -86,12 +77,8 @@ export default function PriceInfoBar({
         <Divider />
         <AgentBlock advisor={advisor} />
 
-        {resolvedMeta && (
-          <>
-            <Divider />
-            <MetaBlock label={resolvedMeta.label} value={resolvedMeta.value} />
-          </>
-        )}
+        <Divider />
+        <CodeBlock propertyCode={propertyCode} />
 
         <Divider />
         {cta}
@@ -101,7 +88,7 @@ export default function PriceInfoBar({
       <div className="hidden md:flex items-center gap-4 overflow-hidden rounded-lg border border-border-default bg-bg-surface px-4 py-6">
         <div className="flex-1 flex flex-col gap-1">
           <p className="text-body-md text-text-primary">
-            {resolvedPriceLabel}
+            {priceLabel}
           </p>
           <p className="font-display text-display-2xl font-extrabold tracking-tight text-action-cta">
             {formatCOP(price)}
@@ -114,14 +101,11 @@ export default function PriceInfoBar({
           <AgentBlock advisor={advisor} />
         </div>
 
-        {resolvedMeta && (
-          <>
-            <Divider direction="vertical" />
-            <div className="shrink-0 px-6">
-              <MetaBlock label={resolvedMeta.label} value={resolvedMeta.value} />
-            </div>
-          </>
-        )}
+        <Divider direction="vertical" />
+
+        <div className="shrink-0 px-6">
+          <CodeBlock propertyCode={propertyCode} />
+        </div>
 
         <Divider direction="vertical" />
 
