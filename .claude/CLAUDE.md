@@ -50,6 +50,7 @@ Note: Next.js 16's `NextConfig` type no longer accepts an `eslint` option (e.g. 
 | Business context and user goals | `docs/context.md` |
 | Page structure and routes | `docs/PRD.md` |
 | History of notable changes | `docs/CHANGELOG.md` |
+| Proyectos feature + `project` schema guide | `docs/proyectos.md` |
 
 ---
 
