@@ -209,9 +209,6 @@ export function toProjectCardProps(p: SanityProject) {
     progressPct:   p.progressPct,
     imageSrc:      p.mainImageUrl ?? undefined,
     imageAlt:      p.mainImageAlt ?? undefined,
-    whatsappUrl:   p.advisor?.whatsapp
-      ? `https://wa.me/${p.advisor.whatsapp}?text=Hola%2C+me+interesa+el+proyecto+de+Servicol%3A+${encodeURIComponent(p.title)}`
-      : undefined,
   }
 }
 
