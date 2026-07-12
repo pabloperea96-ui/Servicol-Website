@@ -5,6 +5,7 @@ import ProgressBar from '@/components/atoms/ProgressBar'
 import Button from '@/components/atoms/Button'
 import Divider from '@/components/atoms/Divider'
 import Icon from '@/components/atoms/Icon'
+import { formatCOP } from '@/lib/formatPrice'
 
 type ProjectCardProps = {
   slug: string
@@ -12,26 +13,23 @@ type ProjectCardProps = {
   startingPrice: number
   progressPct: number
   imageSrc?: string
+  imageAlt?: string
   whatsappUrl?: string
   className?: string
 }
 
-function formatCOP(n: number) {
-  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n)
-}
-
 export default function ProjectCard({
-  slug, title, startingPrice, progressPct, imageSrc, whatsappUrl, className,
+  slug, title, startingPrice, progressPct, imageSrc, imageAlt, whatsappUrl, className,
 }: ProjectCardProps) {
   return (
     <article
       className={[
-        'flex flex-col overflow-hidden rounded-lg border border-border-default bg-bg-surface w-[300px]',
+        'flex flex-col overflow-hidden rounded-lg border border-border-default bg-bg-surface w-full',
         className,
       ].filter(Boolean).join(' ')}
     >
       <div className="relative h-[200px] w-full bg-bg-subtle shrink-0">
-        {imageSrc && <img src={imageSrc} alt={title} className="absolute inset-0 size-full object-cover" />}
+        {imageSrc && <img src={imageSrc} alt={imageAlt ?? title} className="absolute inset-0 size-full object-cover" />}
         <Badge type="nuevo" className="absolute left-3 top-3" />
       </div>
 

@@ -9,6 +9,7 @@ import NavDrawer   from '@/components/organisms/NavDrawer'
 
 const NAV_LINKS = [
   { label: 'Portafolio', href: '/portafolio' },
+  { label: 'Proyectos',  href: '/proyectos'  },
   { label: 'Servicios',  href: '/servicios'  },
   { label: 'Nosotros',   href: '/nosotros'   },
   { label: 'Contacto',   href: '/contacto'   },
