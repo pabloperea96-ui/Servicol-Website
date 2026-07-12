@@ -13,14 +13,16 @@ A real estate agency with 25+ years of experience in Boyacá, Colombia (Duitama�
 ## Commands
 
 ```bash
-npm run dev      # start dev server (default port 3000)
-npm run build    # production build
-npm run lint     # ESLint
-npm run start    # serve production build
-npx sanity typegen generate   # regenerate TypeScript types from Sanity schema
+pnpm dev      # start dev server (default port 3000)
+pnpm build    # production build
+pnpm lint     # ESLint
+pnpm start    # serve production build
+pnpm exec sanity typegen generate   # regenerate TypeScript types from Sanity schema
 ```
 
-To test on a phone on the same LAN: the dev server already allows `192.168.0.29` via `allowedDevOrigins` in `next.config.ts`. Run `npm run dev` and open that IP from the phone. Update the IP in `next.config.ts` if your LAN address differs.
+The repo migrated from npm to pnpm (2026-07). `packageManager` is pinned in `package.json`; `pnpm.onlyBuiltDependencies` approves the postinstall scripts pnpm 10 blocks by default (esbuild, sharp, unrs-resolver) — extend that list if a new native dependency fails to build.
+
+To test on a phone on the same LAN: the dev server already allows `192.168.0.29` via `allowedDevOrigins` in `next.config.ts`. Run `pnpm dev` and open that IP from the phone. Update the IP in `next.config.ts` if your LAN address differs.
 
 There is no test runner. `/test-tap` is a throwaway page for verifying touch events on iPhone — not linked from anywhere.
 
@@ -37,7 +39,7 @@ Note: Next.js 16's `NextConfig` type no longer accepts an `eslint` option (e.g. 
 | Styles | Tailwind CSS v4 |
 | Icons | `lucide-react` |
 | CMS | Sanity (project `yx3xhsjf`, dataset `production`) |
-| Package manager | npm |
+| Package manager | pnpm (migrated from npm 2026-07; lockfile `pnpm-lock.yaml`) |
 
 ---
 
