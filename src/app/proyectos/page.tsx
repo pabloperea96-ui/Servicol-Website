@@ -47,10 +47,6 @@ export default async function ProyectosPage() {
           <h1 className="text-display-md text-text-primary font-display font-bold md:text-display-xl">
             Proyectos nuevos
           </h1>
-          <p className="max-w-[720px] font-body text-body-lg font-light text-text-secondary">
-            Vivienda nueva en el corredor Duitama – Paipa: proyectos sobre planos y en
-            construcción, con el acompañamiento de Servicol de principio a fin.
-          </p>
         </div>
 
         {/* Grid de proyectos */}

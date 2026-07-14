@@ -12,7 +12,7 @@ Dos rutas nuevas, diseñadas primero en Figma (archivo Web Design, páginas "Pro
 
 | Ruta | Qué muestra |
 |---|---|
-| `/proyectos` | Breadcrumb + título + descripción, grid de cards (1 col móvil / 2 tablet / 3 desktop), CTA de WhatsApp y footer. Si no hay proyectos publicados muestra un empty state con botón de WhatsApp. |
+| `/proyectos` | Breadcrumb + título, grid de cards (1 col móvil / 2 tablet / 3 desktop), CTA de WhatsApp y footer. Si no hay proyectos publicados muestra un empty state con botón de WhatsApp. |
 | `/proyectos/[slug]` | Badge de estado + título + dirección, galería de renders, barra de info (avance de obra + fechas \| asesor \| botón Contactar), tipologías, descripción y "Otros proyectos". |
 
 ### Cambios por capa
