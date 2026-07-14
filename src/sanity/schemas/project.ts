@@ -122,7 +122,7 @@ export default defineType({
 
     defineField({
       name: 'unitTypes',
-      title: 'Tipologías disponibles',
+      title: 'Tipos de propiedad',
       type: 'array',
       group: 'identification',
       description: 'Tipos de unidad disponibles en el proyecto.',

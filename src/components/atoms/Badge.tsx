@@ -1,6 +1,13 @@
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-type BadgeType = 'venta' | 'arriendo' | 'nuevo' | 'comercial';
+type BadgeType =
+  | 'venta'
+  | 'arriendo'
+  | 'nuevo'
+  | 'comercial'
+  | 'en-planos'
+  | 'en-construccion'
+  | 'entregado';
 
 interface BadgeProps {
   type: BadgeType;
@@ -14,6 +21,9 @@ const styles: Record<BadgeType, { container: string; text: string; label: string
   arriendo:  { container: 'bg-action-primary',                          text: 'text-text-inverse',     label: 'ARRIENDO'  },
   nuevo:     { container: 'border-[0.5px] border-border-default',       text: 'text-action-primary',   label: 'NUEVO'     },
   comercial: { container: 'border-[0.5px] border-border-default',       text: 'text-text-secondary',   label: 'COMERCIAL' },
+  'en-planos':       { container: 'bg-bg-subtle',        text: 'text-text-secondary', label: 'EN PLANOS'       },
+  'en-construccion': { container: 'bg-action-cta-light', text: 'text-action-cta',     label: 'EN CONSTRUCCIÓN' },
+  entregado:         { container: 'bg-action-primary',   text: 'text-text-inverse',   label: 'ENTREGADO'       },
 };
 
 // ─── Componente ───────────────────────────────────────────────────────────────

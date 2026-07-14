@@ -62,6 +62,7 @@
   --font-size-label: 11px;
   --font-size-card-price: 20px;
   --font-size-card-spec:  11px;
+  --font-size-progress-label: 14px;
 
   /* Motion durations */
   --duration-fast: 120ms;
@@ -109,6 +110,7 @@
     --font-size-body-md: 16px;
     --font-size-card-price: 26px;
     --font-size-card-spec:  14px;
+    --font-size-progress-label: 16px;
   }
 }
 

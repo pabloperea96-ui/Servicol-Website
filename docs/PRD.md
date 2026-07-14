@@ -10,7 +10,7 @@ Read `servicol_design_system_v1_1.html` for design tokens and component specs.
 
 This PRD covers the full stack of servicolinmobiliaria.com:
 
-- 6 frontend pages plus global components (Next.js 15, App Router)
+- 8 frontend pages plus global components (Next.js, App Router)
 - Sanity CMS as the content layer for all catalog data
 - ISR rendering strategy with Sanity webhooks for revalidation
 
@@ -19,9 +19,13 @@ This PRD covers the full stack of servicolinmobiliaria.com:
 - Custom backend or REST API beyond Sanity's hosted API
 - User authentication for visitors
 - Payment or transaction flows
-- New construction projects (`/proyectos`). Company decision: completed
-  projects are listed as regular properties in the portfolio using the
-  standard `property` schema.
+
+**Scope revision (2026-07):** New construction projects (`/proyectos`) were
+originally out of scope by company decision. That decision was reversed: the
+`project` Sanity schema powers `/proyectos` (listing) and `/proyectos/[slug]`
+(detail with status badge, render gallery, starting price with advisor
+WhatsApp CTA, construction progress, unit types and related projects).
+Completed projects can still be listed as regular properties.
 
 ---
 

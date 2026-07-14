@@ -3,6 +3,7 @@ import Avatar  from '@/components/atoms/Avatar'
 import Button  from '@/components/atoms/Button'
 import Divider from '@/components/atoms/Divider'
 import type { Advisor } from '@/lib/mock-properties'
+import { formatCOP } from '@/lib/formatPrice'
 
 type Props = {
   price:        number
@@ -12,15 +13,7 @@ type Props = {
   whatsappUrl:  string
 }
 
-function formatCOP(n: number) {
-  return new Intl.NumberFormat('es-CO', {
-    style:                 'currency',
-    currency:              'COP',
-    maximumFractionDigits: 0,
-  }).format(n)
-}
-
-function AgentBlock({ advisor }: { advisor: Advisor }) {
+export function AgentBlock({ advisor }: { advisor: Advisor }) {
   return (
     <div className="flex items-center gap-2">
       <Avatar src={advisor.photoUrl} initials={advisor.initials} size="md" alt={advisor.name} />

@@ -101,13 +101,15 @@ export function computeInitials(name: string): string {
 export function toAdvisor(
   raw: SanityProperty['advisor'],
   propertyTitle?: string,
+  kind: 'propiedad' | 'proyecto' = 'propiedad',
 ): Advisor | null {
   if (!raw) return null
+  const interest = kind === 'proyecto' ? 'el+proyecto' : 'una+propiedad'
   return {
     name:        raw.name,
     role:        raw.role,
     initials:    computeInitials(raw.name),
-    whatsappUrl: `https://wa.me/${raw.whatsapp}?text=Hola%2C+me+interesa+una+propiedad+de+Servicol${propertyTitle ? `%3A+${encodeURIComponent(propertyTitle)}` : ''}`,
+    whatsappUrl: `https://wa.me/${raw.whatsapp}?text=Hola%2C+me+interesa+${interest}+de+Servicol${propertyTitle ? `%3A+${encodeURIComponent(propertyTitle)}` : ''}`,
     photoUrl:    raw.photoUrl ?? undefined,
   }
 }
@@ -158,6 +160,75 @@ export function toTestimonialCard(t: SanityTestimonial) {
     role:   CITY_LABELS[t.city],
     rating: t.rating,
   }
+}
+
+// ─── Tipo inferido de los resultados de project en Sanity ────────────────────
+
+export type SanityProjectUnitType = {
+  name:      string
+  area:      number
+  bedrooms:  number
+  bathrooms: number
+  price:     number
+}
+
+export type SanityProject = {
+  _id:          string
+  title:        string
+  slug:         string
+  status:       'en-planos' | 'en-construccion' | 'entregado'
+  zone:         string
+  startingPrice: number
+  progressPct:  number
+  featured:     boolean
+  mainImageUrl: string | null
+  mainImageAlt: string | null
+  advisor: {
+    name:      string
+    role?:     string
+    whatsapp:  string
+    photoUrl?: string
+  } | null
+  // Solo en ficha de detalle
+  address?:           string
+  city?:              string
+  description?:       string
+  startDate?:         string
+  estimatedDelivery?: string
+  unitTypes?:         SanityProjectUnitType[]
+  renders?: Array<{ url: string | null; alt: string | null; caption: string | null }>
+}
+
+// ─── SanityProject → ProjectCard props ───────────────────────────────────────
+
+export function toProjectCardProps(p: SanityProject) {
+  return {
+    slug:          p.slug,
+    title:         p.title,
+    startingPrice: p.startingPrice,
+    progressPct:   p.progressPct,
+    imageSrc:      p.mainImageUrl ?? undefined,
+    imageAlt:      p.mainImageAlt ?? undefined,
+  }
+}
+
+// ─── Renders del proyecto → MediaItem[] para ImageGallery ───────────────────
+
+export function toProjectMediaItems(p: SanityProject): MediaItem[] {
+  const items: MediaItem[] = []
+  if (p.mainImageUrl) {
+    items.push({ mediaType: 'image', url: p.mainImageUrl, alt: p.mainImageAlt ?? p.title })
+  }
+  for (const r of p.renders ?? []) {
+    if (!r.url || r.url === p.mainImageUrl) continue
+    items.push({
+      mediaType: 'image',
+      url:       r.url,
+      alt:       r.alt ?? p.title,
+      ...(r.caption ? { caption: r.caption } : {}),
+    })
+  }
+  return items
 }
 
 // ─── Tipo de ítem de galería (imagen o video) ────────────────────────────────

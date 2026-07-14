@@ -133,9 +133,12 @@ These are closed decisions. Do not reopen without a specific reason.
 - **Primary contact channel:** WhatsApp over phone calls or email.
 - **Routes in Spanish:** `/portafolio`, `/nosotros`, `/contacto` — they
   are part of the product UX, not the codebase.
-- **No new construction section:** Company decision. Completed projects
-  are listed as regular properties in the portfolio. The `/proyectos`
-  route does not exist in this product.
+- **New construction section (revised 2026-07):** The original decision to
+  exclude `/proyectos` was reversed. New construction projects have their own
+  Sanity schema (`project`) and two routes: `/proyectos` (listing) and
+  `/proyectos/[slug]` (detail with construction progress, unit types and
+  advisor contact). Completed projects can still be listed as regular
+  properties in the portfolio.
 - **No backend yet:** This phase is frontend only. No CMS or database
   decisions have been made.
 

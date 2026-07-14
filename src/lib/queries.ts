@@ -106,6 +106,82 @@ export const PROPERTY_METADATA_QUERY = groq`
   }
 `
 
+// ─── Proyectos nuevos ─────────────────────────────────────────────────────────
+
+const PROJECT_CARD_FIELDS = groq`
+  _id,
+  title,
+  "slug":         slug.current,
+  status,
+  zone,
+  startingPrice,
+  progressPct,
+  featured,
+  "mainImageUrl": mainImage.asset->url,
+  "mainImageAlt": mainImage.alt,
+  advisor-> {
+    name,
+    whatsapp
+  }
+`
+
+export const ALL_PROJECTS_QUERY = groq`
+  *[_type == "project" && published == true] | order(publishedAt desc) {
+    ${PROJECT_CARD_FIELDS}
+  }
+`
+
+export const PROJECT_BY_SLUG_QUERY = groq`
+  *[_type == "project" && slug.current == $slug && published == true][0] {
+    ${PROJECT_CARD_FIELDS},
+    address,
+    "city": ${cityFromZone},
+    description,
+    startDate,
+    estimatedDelivery,
+    unitTypes[] {
+      name,
+      area,
+      bedrooms,
+      bathrooms,
+      price
+    },
+    "renders": renders[] {
+      "url": asset->url,
+      "alt": alt,
+      caption
+    },
+    advisor-> {
+      name,
+      role,
+      whatsapp,
+      "photoUrl": photo.asset->url
+    }
+  }
+`
+
+export const PROJECT_SLUGS_QUERY = groq`
+  *[_type == "project" && defined(slug.current) && published == true]{ "slug": slug.current }
+`
+
+export const PROJECT_METADATA_QUERY = groq`
+  *[_type == "project" && slug.current == $slug && published == true][0] {
+    title,
+    status,
+    zone,
+    startingPrice,
+    "slug": slug.current,
+    "mainImageUrl": mainImage.asset->url
+  }
+`
+
+export const OTHER_PROJECTS_QUERY = groq`
+  *[_type == "project" && published == true && slug.current != $slug]
+  | order(publishedAt desc)[0...3] {
+    ${PROJECT_CARD_FIELDS}
+  }
+`
+
 export const TESTIMONIALS_QUERY = groq`
   *[_type == "testimonial" && featured == true] | order(_createdAt desc) {
     _id,

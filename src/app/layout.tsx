@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Figtree, Inter, Fira_Code } from "next/font/google";
+import ScrollRestoration from "./ScrollRestoration";
 import "./globals.css";
 
 const figtree = Figtree({
@@ -48,7 +49,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "history.scrollRestoration='manual'" }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -108,7 +108,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ScrollRestoration />
+        {children}
+      </body>
     </html>
   );
 }

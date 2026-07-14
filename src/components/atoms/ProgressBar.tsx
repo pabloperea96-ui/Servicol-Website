@@ -16,7 +16,7 @@ export default function ProgressBar({
   return (
     <div className={['flex flex-col gap-[6px] w-full', className].filter(Boolean).join(' ')}>
       {showLabel && (
-        <div className="flex justify-between font-body text-[13px] font-medium text-text-secondary">
+        <div className="flex justify-between font-body text-[length:var(--font-size-progress-label)] font-medium text-text-secondary">
           <span>{label}</span>
           <span>{clamped}% completado</span>
         </div>
