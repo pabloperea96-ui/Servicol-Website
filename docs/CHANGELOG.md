@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-20 — CTA de agendar cita en el detalle de proyecto
+
+- El `CTASection` del final de `/proyectos/[slug]` usa copy propio ("Agenda una cita
+  y conoce este proyecto" / "Uno de nuestros asesores te contará todos los detalles
+  del proyecto.") y el botón abre WhatsApp con mensaje pre-armado que incluye el
+  nombre del proyecto. La lista `/proyectos` conserva el CTA genérico.
+
 ## 2026-07-20 — Tipologías de proyecto con tipo de inmueble
 
 - Cada tipología (`unitTypes`) exige ahora un `propertyType` con la misma lista de

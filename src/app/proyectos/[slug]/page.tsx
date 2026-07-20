@@ -124,8 +124,9 @@ export default async function ProjectDetailPage({
   const media       = toProjectMediaItems(project)
   const progress    = toProjectProgressDisplay(project.status, project.progressPct)
   const otherCards  = othersRaw.map(toProjectCardProps)
+  const scheduleMessage = `Hola, quiero agendar una cita para conocer más sobre ${project.title}`
   const whatsappUrl = settings?.whatsappMain
-    ? `https://wa.me/${settings.whatsappMain}`
+    ? `https://wa.me/${settings.whatsappMain}?text=${encodeURIComponent(scheduleMessage)}`
     : undefined
   const addressLine = [project.address, project.city].filter(Boolean).join(' · ')
 
@@ -238,7 +239,11 @@ export default async function ProjectDetailPage({
 
         </div>
 
-        <CTASection whatsappUrl={whatsappUrl} />
+        <CTASection
+          title="Agenda una cita y conoce este proyecto"
+          subtitle="Uno de nuestros asesores te contará todos los detalles del proyecto."
+          whatsappUrl={whatsappUrl}
+        />
       </main>
 
       <Footer />
