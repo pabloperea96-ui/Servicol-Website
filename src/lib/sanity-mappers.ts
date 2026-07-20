@@ -196,7 +196,10 @@ export type SanityProject = {
   startDate?:         string
   estimatedDelivery?: string
   unitTypes?:         SanityProjectUnitType[]
-  renders?: Array<{ url: string | null; alt: string | null; caption: string | null }>
+  renders?: Array<
+    | { mediaType: 'image'; url: string | null; alt: string | null; caption: string | null }
+    | { mediaType: 'video'; url: string | null; thumbnailUrl: string | null; caption: string | null }
+  >
 }
 
 // ─── Avance de obra → valor y texto de la barra de progreso ──────────────────
@@ -236,20 +239,35 @@ export function toProjectCardProps(p: SanityProject) {
 
 // ─── Renders del proyecto → MediaItem[] para ImageGallery ───────────────────
 
+// Videos go first so the detail page can autoplay the opening one; mainImage
+// stays as card/OG cover and becomes the first image of the gallery.
 export function toProjectMediaItems(p: SanityProject): MediaItem[] {
-  const items: MediaItem[] = []
+  const videos: MediaItem[] = []
+  const images: MediaItem[] = []
+  for (const r of p.renders ?? []) {
+    if (!r.mediaType || !r.url) continue
+    if (r.mediaType === 'video') {
+      videos.push({
+        mediaType: 'video',
+        url:       r.url,
+        ...(r.thumbnailUrl ? { thumbnailUrl: r.thumbnailUrl } : {}),
+        ...(r.caption ? { caption: r.caption } : {}),
+      })
+    } else {
+      if (r.url === p.mainImageUrl) continue
+      images.push({
+        mediaType: 'image',
+        url:       r.url,
+        alt:       r.alt ?? p.title,
+        ...(r.caption ? { caption: r.caption } : {}),
+      })
+    }
+  }
+  const items: MediaItem[] = [...videos]
   if (p.mainImageUrl) {
     items.push({ mediaType: 'image', url: p.mainImageUrl, alt: p.mainImageAlt ?? p.title })
   }
-  for (const r of p.renders ?? []) {
-    if (!r.url || r.url === p.mainImageUrl) continue
-    items.push({
-      mediaType: 'image',
-      url:       r.url,
-      alt:       r.alt ?? p.title,
-      ...(r.caption ? { caption: r.caption } : {}),
-    })
-  }
+  items.push(...images)
   return items
 }
 

@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-07-20 — Videos en la galería de proyectos con autoplay
+
+- `renders` acepta videos: el objeto `videoItem` (archivo + carátula opcional +
+  descripción) se extrajo de `property.ts` a `src/sanity/schemas/objects/videoItem.ts`
+  y ahora lo comparten las galerías de propiedad y proyecto (mismo `_type`, sin
+  migración de contenido).
+- Orden de la galería del detalle de proyecto (`toProjectMediaItems`): videos primero,
+  luego `mainImage`, luego las imágenes restantes. La card y el OG siguen usando
+  `mainImage`.
+- `ImageGallery` gana la prop opt-in `autoPlayFirstVideo`: si el primer ítem es video,
+  se reproduce automáticamente en el slot principal (muted, loop, `playsInline`, sin
+  controles, con `poster`); el click sigue abriendo el lightbox con sonido. Respeta
+  `prefers-reduced-motion` y fuerza `muted` + `play()` vía callback ref (React no
+  serializa `muted` en SSR). Solo el detalle de proyecto la activa — propiedades sin
+  cambios.
+
 ## 2026-07-20 — Proyectos "En planos": avance genérico y fechas opcionales
 
 - El estado `en-planos` ahora significa "obra no iniciada": en el Studio se oculta

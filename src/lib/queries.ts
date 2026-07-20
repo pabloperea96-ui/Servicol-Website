@@ -147,9 +147,18 @@ export const PROJECT_BY_SLUG_QUERY = groq`
       price
     },
     "renders": renders[] {
-      "url": asset->url,
-      "alt": alt,
-      caption
+      _type == "image" => {
+        "mediaType": "image",
+        "url":       asset->url,
+        "alt":       alt,
+        caption
+      },
+      _type == "videoItem" => {
+        "mediaType":    "video",
+        "url":          video.asset->url,
+        "thumbnailUrl": thumbnail.asset->url,
+        caption
+      }
     },
     advisor-> {
       name,

@@ -172,7 +172,7 @@ export default async function ProjectDetailPage({
             </div>
           </div>
 
-          {media.length > 0 && <ImageGallery media={media} title={project.title} />}
+          {media.length > 0 && <ImageGallery media={media} title={project.title} autoPlayFirstVideo />}
 
           {effectiveAdvisor && (
             <ProjectInfoBar

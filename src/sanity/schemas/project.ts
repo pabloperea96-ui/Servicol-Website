@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { HomeIcon } from '@sanity/icons'
+import { videoItemMember } from './objects/videoItem'
 
 export default defineType({
   name: 'project',
@@ -271,10 +272,11 @@ export default defineType({
 
     defineField({
       name: 'renders',
-      title: 'Galería de renders',
+      title: 'Galería de renders y videos',
       type: 'array',
       group: 'media',
-      description: 'Renders del proyecto: exterior, interior, planos.',
+      description:
+        'Renders del proyecto: exterior, interior, planos. También acepta videos: el primero aparece de primero en la galería y se reproduce automáticamente (sin sonido) en la página del proyecto. Usa MP4 cortos y comprimidos.',
       of: [
         {
           type: 'image',
@@ -295,6 +297,7 @@ export default defineType({
             }),
           ],
         },
+        videoItemMember,
       ],
       validation: (Rule) =>
         Rule.required().min(1).error('Agrega al menos un render del proyecto'),

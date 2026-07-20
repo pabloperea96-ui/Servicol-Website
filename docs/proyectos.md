@@ -71,6 +71,13 @@ Commits del branch: `0f24e51` (feature base), `43f8398` (fixes), `19a11a7` (card
   en `toProjectProgressDisplay()` (`sanity-mappers.ts`) y aplica también como fallback si
   `progressPct` viene nulo en cualquier estado. No se agregó un campo "¿inició obra?":
   el estado "En planos" ya expresa eso y evita combinaciones contradictorias.
+- **El video del proyecto se auto-reproduce solo en el detalle de proyecto** (decisión
+  2026-07-20). Los navegadores solo permiten autoplay silenciado, así que el primer video
+  se reproduce muted/loop/sin controles en el slot principal de la galería; el click abre
+  el lightbox con sonido y controles. Es un opt-in (`autoPlayFirstVideo`) de `ImageGallery`:
+  el detalle de propiedades conserva su comportamiento actual (miniatura + play). Se
+  respeta `prefers-reduced-motion` (cae a miniatura + play). El orden "videos primero" lo
+  impone `toProjectMediaItems()` para que el autoplay sea predecible para el editor.
 
 ---
 
@@ -110,8 +117,8 @@ opcionales. En los demás estados los tres son obligatorios.
 
 | Campo | Tipo | Validación | Dónde se usa |
 |---|---|---|---|
-| Imagen principal (`mainImage`) | imagen + alt obligatorio | requerido | Foto de la card, primera imagen de la galería del detalle y OG image para redes |
-| Galería de renders (`renders`) | lista de imágenes (alt obligatorio, pie de foto opcional) | mínimo 1 | Galería del detalle (con lightbox). Si un render repite la imagen principal, se deduplica |
+| Imagen principal (`mainImage`) | imagen + alt obligatorio | requerido | Foto de la card y OG image para redes. En la galería del detalle va después de los videos (si los hay) |
+| Galería de renders y videos (`renders`) | lista de imágenes (alt obligatorio, pie de foto opcional) **y videos** (`videoItem`: archivo + carátula opcional + descripción opcional, objeto compartido con la galería de `property`) | mínimo 1 ítem | Galería del detalle (con lightbox). Orden en el sitio: videos primero → `mainImage` → imágenes restantes en orden editorial. El primer video se reproduce automáticamente (sin sonido, en loop) al entrar al detalle; el click lo abre en el lightbox con sonido. Si un render repite la imagen principal, se deduplica. Subir MP4 cortos y comprimidos: Sanity sirve el archivo sin transcodificar |
 
 ### Pestaña "Contacto y publicación"
 
