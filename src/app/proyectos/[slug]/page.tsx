@@ -23,6 +23,7 @@ import {
   toAdvisor,
   toProjectCardProps,
   toProjectMediaItems,
+  toProjectProgressDisplay,
   computeInitials,
 }                     from '@/lib/sanity-mappers'
 import type { SanityProject, SiteSettings } from '@/lib/sanity-mappers'
@@ -121,6 +122,7 @@ export default async function ProjectDetailPage({
     : null)
 
   const media       = toProjectMediaItems(project)
+  const progress    = toProjectProgressDisplay(project.status, project.progressPct)
   const otherCards  = othersRaw.map(toProjectCardProps)
   const whatsappUrl = settings?.whatsappMain
     ? `https://wa.me/${settings.whatsappMain}`
@@ -172,9 +174,10 @@ export default async function ProjectDetailPage({
 
           {media.length > 0 && <ImageGallery media={media} title={project.title} />}
 
-          {effectiveAdvisor && project.startDate && project.estimatedDelivery && (
+          {effectiveAdvisor && (
             <ProjectInfoBar
-              progressPct={project.progressPct}
+              progressValue={progress.value}
+              progressValueText={progress.valueText}
               startDate={project.startDate}
               estimatedDelivery={project.estimatedDelivery}
               advisor={effectiveAdvisor}

@@ -8,14 +8,15 @@ type ProjectCardProps = {
   slug: string
   title: string
   startingPrice: number
-  progressPct: number
+  progressValue: number
+  progressValueText?: string
   imageSrc?: string
   imageAlt?: string
   className?: string
 }
 
 export default function ProjectCard({
-  slug, title, startingPrice, progressPct, imageSrc, imageAlt, className,
+  slug, title, startingPrice, progressValue, progressValueText, imageSrc, imageAlt, className,
 }: ProjectCardProps) {
   return (
     <Link
@@ -34,7 +35,7 @@ export default function ProjectCard({
       <div className="flex flex-col gap-[14px] p-5">
         <h3 className="font-display text-display-sm font-semibold text-text-primary">{title}</h3>
 
-        <ProgressBar value={progressPct} label="Avance" />
+        <ProgressBar value={progressValue} valueText={progressValueText} label="Avance" />
 
         <div className="flex flex-col gap-1">
           <p className="font-body text-[12px] text-text-muted">Desde</p>

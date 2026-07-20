@@ -179,7 +179,7 @@ export type SanityProject = {
   status:       'en-planos' | 'en-construccion' | 'entregado'
   zone:         string
   startingPrice: number
-  progressPct:  number
+  progressPct:  number | null
   featured:     boolean
   mainImageUrl: string | null
   mainImageAlt: string | null
@@ -199,16 +199,38 @@ export type SanityProject = {
   renders?: Array<{ url: string | null; alt: string | null; caption: string | null }>
 }
 
+// ─── Avance de obra → valor y texto de la barra de progreso ──────────────────
+
+// Symbolic fill for projects that haven't broken ground yet
+const PLANNED_PROGRESS_PCT = 5
+
+export type ProjectProgressDisplay = {
+  value:      number
+  valueText?: string
+}
+
+export function toProjectProgressDisplay(
+  status: SanityProject['status'],
+  progressPct: number | null,
+): ProjectProgressDisplay {
+  if (status === 'en-planos' || progressPct == null) {
+    return { value: PLANNED_PROGRESS_PCT, valueText: 'En planos' }
+  }
+  return { value: progressPct }
+}
+
 // ─── SanityProject → ProjectCard props ───────────────────────────────────────
 
 export function toProjectCardProps(p: SanityProject) {
+  const progress = toProjectProgressDisplay(p.status, p.progressPct)
   return {
-    slug:          p.slug,
-    title:         p.title,
-    startingPrice: p.startingPrice,
-    progressPct:   p.progressPct,
-    imageSrc:      p.mainImageUrl ?? undefined,
-    imageAlt:      p.mainImageAlt ?? undefined,
+    slug:              p.slug,
+    title:             p.title,
+    startingPrice:     p.startingPrice,
+    progressValue:     progress.value,
+    progressValueText: progress.valueText,
+    imageSrc:          p.mainImageUrl ?? undefined,
+    imageAlt:          p.mainImageAlt ?? undefined,
   }
 }
 

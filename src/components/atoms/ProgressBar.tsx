@@ -1,6 +1,7 @@
 type ProgressBarProps = {
   value: number          // 0–100
   label?: string
+  valueText?: string     // overrides the "X% completado" text (e.g. "En planos")
   showLabel?: boolean
   className?: string
 }
@@ -8,6 +9,7 @@ type ProgressBarProps = {
 export default function ProgressBar({
   value,
   label = 'Avance del proyecto',
+  valueText,
   showLabel = true,
   className,
 }: ProgressBarProps) {
@@ -18,7 +20,7 @@ export default function ProgressBar({
       {showLabel && (
         <div className="flex justify-between font-body text-[length:var(--font-size-progress-label)] font-medium text-text-secondary">
           <span>{label}</span>
-          <span>{clamped}% completado</span>
+          <span>{valueText ?? `${clamped}% completado`}</span>
         </div>
       )}
       <div
@@ -26,6 +28,7 @@ export default function ProgressBar({
         aria-valuenow={clamped}
         aria-valuemin={0}
         aria-valuemax={100}
+        aria-valuetext={valueText}
         aria-label={label}
         className="relative h-[6px] w-full overflow-hidden rounded-full bg-bg-subtle"
       >

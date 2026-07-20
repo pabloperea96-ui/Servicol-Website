@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-07-20 — Proyectos "En planos": avance genérico y fechas opcionales
+
+- El estado `en-planos` ahora significa "obra no iniciada": en el Studio se oculta
+  `Avance de obra (%)` y las fechas de inicio/entrega pasan a ser opcionales
+  (siguen obligatorias en construcción/entregado), vía validación condicional.
+- El sitio muestra un avance simbólico para proyectos en planos: barra al 5% con el
+  texto "En planos" en vez de "X% completado" (card y barra de info del detalle).
+  Lógica centralizada en `toProjectProgressDisplay()` (`sanity-mappers.ts`).
+- `ProgressBar` acepta `valueText` (override del texto de porcentaje, con
+  `aria-valuetext`); `ProjectProgress`/`ProjectInfoBar` aceptan fechas opcionales y
+  ocultan los bloques de fecha ausentes.
+- La barra de info del detalle ya no exige fechas para renderizarse: basta con el
+  asesor, para no perder el CTA de WhatsApp en proyectos en planos.
+
 ## 2026-07-12 — Páginas de proyectos nuevos
 
 - Nuevas rutas `/proyectos` (lista) y `/proyectos/[slug]` (detalle), basadas en el

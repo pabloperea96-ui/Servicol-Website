@@ -196,13 +196,20 @@ export default defineType({
       title: 'Avance de obra (%)',
       type: 'number',
       group: 'progress',
-      description: 'Porcentaje de avance de la construcción. Valor entre 0 y 100.',
+      description:
+        'Porcentaje de avance de la construcción. Valor entre 0 y 100. No aplica si el proyecto está en planos: el sitio muestra un avance genérico.',
+      hidden: ({ document }) => document?.status === 'en-planos',
       validation: (Rule) =>
-        Rule.required()
-          .min(0)
-          .max(100)
-          .integer()
-          .error('El avance debe ser un número entero entre 0 y 100'),
+        Rule.custom((value, context) => {
+          if (context.document?.status === 'en-planos') return true
+          if (value === undefined || value === null) {
+            return 'El avance es obligatorio cuando la obra ya inició'
+          }
+          if (!Number.isInteger(value) || value < 0 || value > 100) {
+            return 'El avance debe ser un número entero entre 0 y 100'
+          }
+          return true
+        }),
     }),
 
     defineField({
@@ -210,10 +217,17 @@ export default defineType({
       title: 'Fecha de inicio de obra',
       type: 'date',
       group: 'progress',
+      description: 'Opcional si el proyecto está en planos (puede ser una fecha estimada).',
       options: {
         dateFormat: 'DD/MM/YYYY',
       },
-      validation: (Rule) => Rule.required().error('La fecha de inicio es obligatoria'),
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (context.document?.status === 'en-planos') return true
+          return value
+            ? true
+            : 'La fecha de inicio es obligatoria cuando la obra ya inició'
+        }),
     }),
 
     defineField({
@@ -221,11 +235,17 @@ export default defineType({
       title: 'Fecha estimada de entrega',
       type: 'date',
       group: 'progress',
+      description: 'Opcional si el proyecto está en planos.',
       options: {
         dateFormat: 'DD/MM/YYYY',
       },
       validation: (Rule) =>
-        Rule.required().error('La fecha estimada de entrega es obligatoria'),
+        Rule.custom((value, context) => {
+          if (context.document?.status === 'en-planos') return true
+          return value
+            ? true
+            : 'La fecha estimada de entrega es obligatoria cuando la obra ya inició'
+        }),
     }),
 
     // ─── MEDIA ────────────────────────────────────────────────────────────────

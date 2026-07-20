@@ -65,6 +65,12 @@ Commits del branch: `0f24e51` (feature base), `43f8398` (fixes), `19a11a7` (card
 - **`startingPrice` se mantiene manual** (decisión 2026-07-12). Alternativa futura si se
   desincroniza con las tipologías: eliminarlo del schema y calcularlo en GROQ como
   `math::min(unitTypes[].price)`.
+- **Proyectos "En planos" muestran avance simbólico** (decisión 2026-07-20). No se pide
+  `progressPct` al editor: el sitio dibuja la barra al 5% con el texto "En planos" en vez
+  de un porcentaje, para no comprometer una cifra ni dejar el bloque vacío. La lógica vive
+  en `toProjectProgressDisplay()` (`sanity-mappers.ts`) y aplica también como fallback si
+  `progressPct` viene nulo en cualquier estado. No se agregó un campo "¿inició obra?":
+  el estado "En planos" ya expresa eso y evita combinaciones contradictorias.
 
 ---
 
@@ -90,11 +96,15 @@ después de publicar).
 
 ### Pestaña "Progreso de obra"
 
+Los tres campos son condicionales al estado del proyecto: si el estado es **En planos**
+(obra no iniciada), `progressPct` se oculta en el formulario y las fechas pasan a ser
+opcionales. En los demás estados los tres son obligatorios.
+
 | Campo | Tipo | Validación | Dónde se usa |
 |---|---|---|---|
-| Avance de obra (`progressPct`) | número 0–100 | requerido, entero | Barra de progreso en la card y en la barra de info del detalle ("X% completado") |
-| Fecha de inicio (`startDate`) | fecha | requerido | "Inicio de obra · Marzo 2026" en la barra de info |
-| Entrega estimada (`estimatedDelivery`) | fecha | requerido | "Entrega estimada · Diciembre 2026" en la barra de info |
+| Avance de obra (`progressPct`) | número 0–100 | entero, requerido salvo "En planos" (oculto en ese estado) | Barra de progreso en la card y en la barra de info del detalle ("X% completado"). Si el proyecto está en planos, el sitio ignora el valor y dibuja una barra simbólica al 5% con el texto "En planos" |
+| Fecha de inicio (`startDate`) | fecha | requerido salvo "En planos" | "Inicio de obra · Marzo 2026" en la barra de info. Si falta, el bloque no se muestra |
+| Entrega estimada (`estimatedDelivery`) | fecha | requerido salvo "En planos" | "Entrega estimada · Diciembre 2026" en la barra de info. Si falta, el bloque no se muestra |
 
 ### Pestaña "Galería"
 
