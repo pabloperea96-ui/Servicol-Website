@@ -63,9 +63,11 @@ function MediaThumbContent({
 function AutoplayHeroVideo({
   item,
   className,
+  onOrientation,
 }: {
   item: Extract<MediaItem, { mediaType: 'video' }>
   className: string
+  onOrientation?: (isPortrait: boolean) => void
 }) {
   return (
     <video
@@ -78,12 +80,20 @@ function AutoplayHeroVideo({
       poster={item.thumbnailUrl}
       aria-label={item.caption ?? 'Video'}
       className={className}
+      onLoadedMetadata={e =>
+        onOrientation?.(e.currentTarget.videoHeight > e.currentTarget.videoWidth)
+      }
       // React doesn't serialize `muted` into SSR markup, which makes browsers
       // block autoplay on the hydrated element — force it and retry play()
       ref={el => {
         if (el) {
           el.muted = true
           el.play().catch(() => {})
+          // metadata may already be loaded (e.g. cached video), so the
+          // loadedmetadata event would never fire for this element
+          if (el.readyState >= 1) {
+            onOrientation?.(el.videoHeight > el.videoWidth)
+          }
         }
       }}
     />
@@ -110,6 +120,7 @@ export default function ImageGallery({ media, title, autoPlayFirstVideo = false 
   const [isOpen,  setIsOpen]  = useState(false)
   const [current, setCurrent] = useState(0)
   const [mounted, setMounted] = useState(false)
+  const [heroIsPortrait, setHeroIsPortrait] = useState(false)
   const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => { setMounted(true) }, [])
@@ -285,11 +296,18 @@ export default function ImageGallery({ media, title, autoPlayFirstVideo = false 
       {/* ── Mobile ─────────────────────────────────────────── */}
       <div className="flex flex-col gap-2 md:hidden">
         <div
-          className="relative h-[253px] w-full overflow-hidden rounded-sm bg-bg-subtle cursor-pointer"
+          className={[
+            'relative w-full overflow-hidden rounded-sm bg-bg-subtle cursor-pointer',
+            autoplayHero && heroIsPortrait ? 'aspect-[4/5]' : 'h-[253px]',
+          ].join(' ')}
           onClick={() => open(0)}
         >
           {main && (autoplayHero && main.mediaType === 'video' ? (
-            <AutoplayHeroVideo item={main} className="size-full object-cover pointer-events-none" />
+            <AutoplayHeroVideo
+              item={main}
+              onOrientation={setHeroIsPortrait}
+              className="size-full object-cover pointer-events-none"
+            />
           ) : (
             <MediaThumbContent item={main} alt={title} />
           ))}
@@ -332,7 +350,26 @@ export default function ImageGallery({ media, title, autoPlayFirstVideo = false 
             <img src={main.url} alt={main.alt} className="absolute inset-0 size-full object-cover" />
           )}
           {main?.mediaType === 'video' && (autoplayHero ? (
-            <AutoplayHeroVideo item={main} className="absolute inset-0 size-full object-cover pointer-events-none" />
+            <>
+              {heroIsPortrait && (main.thumbnailUrl ? (
+                <img
+                  src={main.thumbnailUrl}
+                  alt=""
+                  aria-hidden
+                  className="absolute inset-0 size-full object-cover blur-2xl scale-110"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-bg-dark" />
+              ))}
+              <AutoplayHeroVideo
+                item={main}
+                onOrientation={setHeroIsPortrait}
+                className={[
+                  'absolute inset-0 size-full pointer-events-none',
+                  heroIsPortrait ? 'object-contain' : 'object-cover',
+                ].join(' ')}
+              />
+            </>
           ) : (
             <>
               {main.thumbnailUrl ? (

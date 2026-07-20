@@ -78,6 +78,8 @@ Commits del branch: `0f24e51` (feature base), `43f8398` (fixes), `19a11a7` (card
   el detalle de propiedades conserva su comportamiento actual (miniatura + play). Se
   respeta `prefers-reduced-motion` (cae a miniatura + play). El orden "videos primero" lo
   impone `toProjectMediaItems()` para que el autoplay sea predecible para el editor.
+  Los videos verticales se adaptan solos (la orientación se detecta al cargar la metadata):
+  en desktop se ven completos sobre la carátula difuminada; en móvil el slot crece a 4:5.
 
 ---
 

@@ -15,6 +15,11 @@
   `prefers-reduced-motion` y fuerza `muted` + `play()` vía callback ref (React no
   serializa `muted` en SSR). Solo el detalle de proyecto la activa — propiedades sin
   cambios.
+- Videos verticales adaptados por dispositivo: la orientación se detecta en runtime
+  (`videoHeight > videoWidth` al cargar metadata). En desktop el video vertical se
+  muestra completo (`object-contain`) sobre la carátula difuminada (o fondo oscuro);
+  en móvil el slot principal crece a proporción 4:5. Videos horizontales y fotos
+  conservan el comportamiento anterior.
 
 ## 2026-07-20 — Proyectos "En planos": avance genérico y fechas opcionales
 
