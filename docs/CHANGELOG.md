@@ -27,7 +27,7 @@
   `Avance de obra (%)` y las fechas de inicio/entrega pasan a ser opcionales
   (siguen obligatorias en construcción/entregado), vía validación condicional.
 - El sitio muestra un avance simbólico para proyectos en planos: barra al 5% con el
-  texto "En planos" en vez de "X% completado" (card y barra de info del detalle).
+  texto "5% · En planos" en vez de "X% completado" (card y barra de info del detalle).
   Lógica centralizada en `toProjectProgressDisplay()` (`sanity-mappers.ts`).
 - `ProgressBar` acepta `valueText` (override del texto de porcentaje, con
   `aria-valuetext`); `ProjectProgress`/`ProjectInfoBar` aceptan fechas opcionales y

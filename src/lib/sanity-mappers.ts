@@ -217,7 +217,7 @@ export function toProjectProgressDisplay(
   progressPct: number | null,
 ): ProjectProgressDisplay {
   if (status === 'en-planos' || progressPct == null) {
-    return { value: PLANNED_PROGRESS_PCT, valueText: 'En planos' }
+    return { value: PLANNED_PROGRESS_PCT, valueText: `${PLANNED_PROGRESS_PCT}% · En planos` }
   }
   return { value: progressPct }
 }
