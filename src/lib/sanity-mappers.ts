@@ -165,11 +165,12 @@ export function toTestimonialCard(t: SanityTestimonial) {
 // ─── Tipo inferido de los resultados de project en Sanity ────────────────────
 
 export type SanityProjectUnitType = {
-  name:      string
-  area:      number
-  bedrooms:  number
-  bathrooms: number
-  price:     number
+  propertyType?: string | null
+  name:          string
+  area:          number
+  bedrooms:      number | null
+  bathrooms:     number | null
+  price:         number
 }
 
 export type SanityProject = {
@@ -179,7 +180,7 @@ export type SanityProject = {
   status:       'en-planos' | 'en-construccion' | 'entregado'
   zone:         string
   startingPrice: number
-  progressPct:  number
+  progressPct:  number | null
   featured:     boolean
   mainImageUrl: string | null
   mainImageAlt: string | null
@@ -196,38 +197,78 @@ export type SanityProject = {
   startDate?:         string
   estimatedDelivery?: string
   unitTypes?:         SanityProjectUnitType[]
-  renders?: Array<{ url: string | null; alt: string | null; caption: string | null }>
+  renders?: Array<
+    | { mediaType: 'image'; url: string | null; alt: string | null; caption: string | null }
+    | { mediaType: 'video'; url: string | null; thumbnailUrl: string | null; caption: string | null }
+  >
+}
+
+// ─── Avance de obra → valor y texto de la barra de progreso ──────────────────
+
+// Symbolic fill for projects that haven't broken ground yet
+const PLANNED_PROGRESS_PCT = 5
+
+export type ProjectProgressDisplay = {
+  value:      number
+  valueText?: string
+}
+
+export function toProjectProgressDisplay(
+  status: SanityProject['status'],
+  progressPct: number | null,
+): ProjectProgressDisplay {
+  if (status === 'en-planos' || progressPct == null) {
+    return { value: PLANNED_PROGRESS_PCT, valueText: `${PLANNED_PROGRESS_PCT}% · En planos` }
+  }
+  return { value: progressPct }
 }
 
 // ─── SanityProject → ProjectCard props ───────────────────────────────────────
 
 export function toProjectCardProps(p: SanityProject) {
+  const progress = toProjectProgressDisplay(p.status, p.progressPct)
   return {
-    slug:          p.slug,
-    title:         p.title,
-    startingPrice: p.startingPrice,
-    progressPct:   p.progressPct,
-    imageSrc:      p.mainImageUrl ?? undefined,
-    imageAlt:      p.mainImageAlt ?? undefined,
+    slug:              p.slug,
+    title:             p.title,
+    startingPrice:     p.startingPrice,
+    progressValue:     progress.value,
+    progressValueText: progress.valueText,
+    imageSrc:          p.mainImageUrl ?? undefined,
+    imageAlt:          p.mainImageAlt ?? undefined,
   }
 }
 
 // ─── Renders del proyecto → MediaItem[] para ImageGallery ───────────────────
 
+// Videos go first so the detail page can autoplay the opening one; mainImage
+// stays as card/OG cover and becomes the first image of the gallery.
 export function toProjectMediaItems(p: SanityProject): MediaItem[] {
-  const items: MediaItem[] = []
+  const videos: MediaItem[] = []
+  const images: MediaItem[] = []
+  for (const r of p.renders ?? []) {
+    if (!r.mediaType || !r.url) continue
+    if (r.mediaType === 'video') {
+      videos.push({
+        mediaType: 'video',
+        url:       r.url,
+        ...(r.thumbnailUrl ? { thumbnailUrl: r.thumbnailUrl } : {}),
+        ...(r.caption ? { caption: r.caption } : {}),
+      })
+    } else {
+      if (r.url === p.mainImageUrl) continue
+      images.push({
+        mediaType: 'image',
+        url:       r.url,
+        alt:       r.alt ?? p.title,
+        ...(r.caption ? { caption: r.caption } : {}),
+      })
+    }
+  }
+  const items: MediaItem[] = [...videos]
   if (p.mainImageUrl) {
     items.push({ mediaType: 'image', url: p.mainImageUrl, alt: p.mainImageAlt ?? p.title })
   }
-  for (const r of p.renders ?? []) {
-    if (!r.url || r.url === p.mainImageUrl) continue
-    items.push({
-      mediaType: 'image',
-      url:       r.url,
-      alt:       r.alt ?? p.title,
-      ...(r.caption ? { caption: r.caption } : {}),
-    })
-  }
+  items.push(...images)
   return items
 }
 

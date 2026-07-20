@@ -23,6 +23,7 @@ import {
   toAdvisor,
   toProjectCardProps,
   toProjectMediaItems,
+  toProjectProgressDisplay,
   computeInitials,
 }                     from '@/lib/sanity-mappers'
 import type { SanityProject, SiteSettings } from '@/lib/sanity-mappers'
@@ -121,9 +122,11 @@ export default async function ProjectDetailPage({
     : null)
 
   const media       = toProjectMediaItems(project)
+  const progress    = toProjectProgressDisplay(project.status, project.progressPct)
   const otherCards  = othersRaw.map(toProjectCardProps)
+  const scheduleMessage = `Hola, quiero agendar una cita para conocer más sobre ${project.title}`
   const whatsappUrl = settings?.whatsappMain
-    ? `https://wa.me/${settings.whatsappMain}`
+    ? `https://wa.me/${settings.whatsappMain}?text=${encodeURIComponent(scheduleMessage)}`
     : undefined
   const addressLine = [project.address, project.city].filter(Boolean).join(' · ')
 
@@ -170,11 +173,12 @@ export default async function ProjectDetailPage({
             </div>
           </div>
 
-          {media.length > 0 && <ImageGallery media={media} title={project.title} />}
+          {media.length > 0 && <ImageGallery media={media} title={project.title} autoPlayFirstVideo />}
 
-          {effectiveAdvisor && project.startDate && project.estimatedDelivery && (
+          {effectiveAdvisor && (
             <ProjectInfoBar
-              progressPct={project.progressPct}
+              progressValue={progress.value}
+              progressValueText={progress.valueText}
               startDate={project.startDate}
               estimatedDelivery={project.estimatedDelivery}
               advisor={effectiveAdvisor}
@@ -235,7 +239,11 @@ export default async function ProjectDetailPage({
 
         </div>
 
-        <CTASection whatsappUrl={whatsappUrl} />
+        <CTASection
+          title="Agenda una cita y conoce este proyecto"
+          subtitle="Uno de nuestros asesores te contará todos los detalles del proyecto."
+          whatsappUrl={whatsappUrl}
+        />
       </main>
 
       <Footer />

@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { HomeIcon } from '@sanity/icons'
+import { videoItemMember } from './objects/videoItem'
 
 // Regex pattern for property code validation
 const PROPERTY_CODE_PATTERN = /^SVC-(AP|CA|LO|LT|FI)-\d{2}-\d{3}$/
@@ -380,40 +381,7 @@ export default defineType({
             }),
           ],
         },
-        {
-          name: 'videoItem',
-          title: 'Video',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'video',
-              title: 'Archivo de video',
-              type: 'file',
-              options: { accept: 'video/*' },
-              validation: (Rule) =>
-                Rule.required().error('El archivo de video es obligatorio'),
-            }),
-            defineField({
-              name: 'thumbnail',
-              title: 'Carátula (opcional)',
-              type: 'image',
-              options: { hotspot: true },
-              description:
-                'Imagen de portada del video. Si no se sube, se mostrará un fondo oscuro.',
-            }),
-            defineField({
-              name: 'caption',
-              title: 'Descripción (opcional)',
-              type: 'string',
-            }),
-          ],
-          preview: {
-            select: { title: 'caption', media: 'thumbnail' },
-            prepare({ title, media }) {
-              return { title: (title as string | undefined) ?? 'Video', media }
-            },
-          },
-        },
+        videoItemMember,
       ],
       validation: (Rule) =>
         Rule.required()

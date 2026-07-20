@@ -3,9 +3,10 @@ import ProgressBar from '@/components/atoms/ProgressBar'
 import { formatMonthYear } from '@/lib/formatPrice'
 
 type ProjectProgressProps = {
-  progressPct: number
-  startDate: string
-  estimatedDelivery: string
+  progressValue: number
+  progressValueText?: string
+  startDate?: string
+  estimatedDelivery?: string
   className?: string
 }
 
@@ -19,16 +20,20 @@ function DateBlock({ label, value, alignEnd }: { label: string; value: string; a
 }
 
 export default function ProjectProgress({
-  progressPct, startDate, estimatedDelivery, className,
+  progressValue, progressValueText, startDate, estimatedDelivery, className,
 }: ProjectProgressProps) {
   return (
     <div className={['flex flex-col gap-4', className].filter(Boolean).join(' ')}>
-      <ProgressBar value={progressPct} label="Avance del proyecto" />
+      <ProgressBar value={progressValue} valueText={progressValueText} label="Avance del proyecto" />
 
-      <div className="flex justify-between gap-4">
-        <DateBlock label="Inicio de obra" value={formatMonthYear(startDate)} />
-        <DateBlock label="Entrega estimada" value={formatMonthYear(estimatedDelivery)} alignEnd />
-      </div>
+      {(startDate || estimatedDelivery) && (
+        <div className="flex justify-between gap-4">
+          {startDate && <DateBlock label="Inicio de obra" value={formatMonthYear(startDate)} />}
+          {estimatedDelivery && (
+            <DateBlock label="Entrega estimada" value={formatMonthYear(estimatedDelivery)} alignEnd />
+          )}
+        </div>
+      )}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useSyncExternalStore } from 'react'
 import { createPortal }        from 'react-dom'
 import Button                  from '@/components/atoms/Button'
 import type { MediaItem }      from '@/lib/sanity-mappers'
@@ -8,6 +8,7 @@ import type { MediaItem }      from '@/lib/sanity-mappers'
 type Props = {
   media: MediaItem[]
   title: string
+  autoPlayFirstVideo?: boolean
 }
 
 function PlayIcon({ size = 16 }: { size?: number }) {
@@ -59,14 +60,73 @@ function MediaThumbContent({
   )
 }
 
-export default function ImageGallery({ media, title }: Props) {
+function AutoplayHeroVideo({
+  item,
+  className,
+  onOrientation,
+}: {
+  item: Extract<MediaItem, { mediaType: 'video' }>
+  className: string
+  onOrientation?: (isPortrait: boolean) => void
+}) {
+  return (
+    <video
+      src={item.url}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      poster={item.thumbnailUrl}
+      aria-label={item.caption ?? 'Video'}
+      className={className}
+      onLoadedMetadata={e =>
+        onOrientation?.(e.currentTarget.videoHeight > e.currentTarget.videoWidth)
+      }
+      // React doesn't serialize `muted` into SSR markup, which makes browsers
+      // block autoplay on the hydrated element — force it and retry play()
+      ref={el => {
+        if (el) {
+          el.muted = true
+          el.play().catch(() => {})
+          // metadata may already be loaded (e.g. cached video), so the
+          // loadedmetadata event would never fire for this element
+          if (el.readyState >= 1) {
+            onOrientation?.(el.videoHeight > el.videoWidth)
+          }
+        }
+      }}
+    />
+  )
+}
+
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
+
+function subscribeToReducedMotion(onStoreChange: () => void) {
+  const query = window.matchMedia(REDUCED_MOTION_QUERY)
+  query.addEventListener('change', onStoreChange)
+  return () => query.removeEventListener('change', onStoreChange)
+}
+
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    subscribeToReducedMotion,
+    () => window.matchMedia(REDUCED_MOTION_QUERY).matches,
+    () => false,
+  )
+}
+
+export default function ImageGallery({ media, title, autoPlayFirstVideo = false }: Props) {
   const [isOpen,  setIsOpen]  = useState(false)
   const [current, setCurrent] = useState(0)
   const [mounted, setMounted] = useState(false)
+  const [heroIsPortrait, setHeroIsPortrait] = useState(false)
+  const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => { setMounted(true) }, [])
 
   const main          = media[0]
+  const autoplayHero  = autoPlayFirstVideo && !reducedMotion && main?.mediaType === 'video'
   const total         = media.length
   const mobileThumbs  = media.slice(1, 5)
   const mobileExtra   = total - 4
@@ -236,12 +296,21 @@ export default function ImageGallery({ media, title }: Props) {
       {/* ── Mobile ─────────────────────────────────────────── */}
       <div className="flex flex-col gap-2 md:hidden">
         <div
-          className="relative h-[253px] w-full overflow-hidden rounded-sm bg-bg-subtle cursor-pointer"
+          className={[
+            'relative w-full overflow-hidden rounded-sm bg-bg-subtle cursor-pointer',
+            autoplayHero && heroIsPortrait ? 'aspect-[4/5]' : 'h-[253px]',
+          ].join(' ')}
           onClick={() => open(0)}
         >
-          {main && (
+          {main && (autoplayHero && main.mediaType === 'video' ? (
+            <AutoplayHeroVideo
+              item={main}
+              onOrientation={setHeroIsPortrait}
+              className="size-full object-cover pointer-events-none"
+            />
+          ) : (
             <MediaThumbContent item={main} alt={title} />
-          )}
+          ))}
         </div>
 
         {mobileThumbs.length > 0 && (
@@ -280,7 +349,28 @@ export default function ImageGallery({ media, title }: Props) {
           {main?.mediaType === 'image' && (
             <img src={main.url} alt={main.alt} className="absolute inset-0 size-full object-cover" />
           )}
-          {main?.mediaType === 'video' && (
+          {main?.mediaType === 'video' && (autoplayHero ? (
+            <>
+              {heroIsPortrait && (main.thumbnailUrl ? (
+                <img
+                  src={main.thumbnailUrl}
+                  alt=""
+                  aria-hidden
+                  className="absolute inset-0 size-full object-cover blur-2xl scale-110"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-bg-dark" />
+              ))}
+              <AutoplayHeroVideo
+                item={main}
+                onOrientation={setHeroIsPortrait}
+                className={[
+                  'absolute inset-0 size-full pointer-events-none',
+                  heroIsPortrait ? 'object-contain' : 'object-cover',
+                ].join(' ')}
+              />
+            </>
+          ) : (
             <>
               {main.thumbnailUrl ? (
                 <img src={main.thumbnailUrl} alt={main.caption ?? 'Video'} className="absolute inset-0 size-full object-cover" />
@@ -293,7 +383,7 @@ export default function ImageGallery({ media, title }: Props) {
                 </div>
               </div>
             </>
-          )}
+          ))}
           <div className="relative flex flex-[1_0_0] flex-col items-end justify-between min-h-0 w-full px-2">
             <div className="rounded-[4px] bg-black/[0.65] px-[10px] py-1">
               <span className="font-body text-[12px] font-medium leading-normal text-text-inverse whitespace-nowrap">

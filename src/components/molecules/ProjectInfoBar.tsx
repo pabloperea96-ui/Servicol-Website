@@ -7,19 +7,21 @@ import { AgentBlock } from '@/components/molecules/PriceInfoBar'
 import type { Advisor } from '@/lib/mock-properties'
 
 type Props = {
-  progressPct:       number
-  startDate:         string
-  estimatedDelivery: string
-  advisor:           Advisor
-  whatsappUrl:       string
+  progressValue:      number
+  progressValueText?: string
+  startDate?:         string
+  estimatedDelivery?: string
+  advisor:            Advisor
+  whatsappUrl:        string
 }
 
 export default function ProjectInfoBar({
-  progressPct, startDate, estimatedDelivery, advisor, whatsappUrl,
+  progressValue, progressValueText, startDate, estimatedDelivery, advisor, whatsappUrl,
 }: Props) {
   const progress = (
     <ProjectProgress
-      progressPct={progressPct}
+      progressValue={progressValue}
+      progressValueText={progressValueText}
       startDate={startDate}
       estimatedDelivery={estimatedDelivery}
     />

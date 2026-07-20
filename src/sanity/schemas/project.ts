@@ -1,5 +1,14 @@
 import { defineField, defineType } from 'sanity'
 import { HomeIcon } from '@sanity/icons'
+import { videoItemMember } from './objects/videoItem'
+
+// Unit types where bedrooms/bathrooms don't apply
+const UNIT_TYPES_WITHOUT_ROOMS = ['local-oficina', 'lote']
+
+function unitTypeHasNoRooms(parent: unknown): boolean {
+  const propertyType = (parent as { propertyType?: string } | undefined)?.propertyType
+  return UNIT_TYPES_WITHOUT_ROOMS.includes(propertyType ?? '')
+}
 
 export default defineType({
   name: 'project',
@@ -133,10 +142,27 @@ export default defineType({
           title: 'Tipología',
           fields: [
             defineField({
+              name: 'propertyType',
+              title: 'Tipo de inmueble',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Apartamento', value: 'apartamento' },
+                  { title: 'Casa', value: 'casa' },
+                  { title: 'Local / Oficina', value: 'local-oficina' },
+                  { title: 'Lote', value: 'lote' },
+                  { title: 'Finca', value: 'finca' },
+                ],
+                layout: 'dropdown',
+              },
+              validation: (Rule) =>
+                Rule.required().error('Selecciona el tipo de inmueble de esta tipología'),
+            }),
+            defineField({
               name: 'name',
               title: 'Nombre de la tipología',
               type: 'string',
-              description: 'Ej: Apartamento tipo A, Casa esquinera',
+              description: 'Ej: Apartamento tipo A, Casa esquinera, Local comercial',
               validation: (Rule) => Rule.required(),
             }),
             defineField({
@@ -150,15 +176,35 @@ export default defineType({
               name: 'bedrooms',
               title: 'Habitaciones',
               type: 'number',
+              hidden: ({ parent }) => unitTypeHasNoRooms(parent),
               validation: (Rule) =>
-                Rule.required().min(0).integer(),
+                Rule.custom((value, context) => {
+                  if (unitTypeHasNoRooms(context.parent)) return true
+                  if (value === undefined || value === null) {
+                    return 'Las habitaciones son obligatorias para esta tipología'
+                  }
+                  if (!Number.isInteger(value) || value < 0) {
+                    return 'Debe ser un número entero mayor o igual a 0'
+                  }
+                  return true
+                }),
             }),
             defineField({
               name: 'bathrooms',
               title: 'Baños',
               type: 'number',
+              hidden: ({ parent }) => unitTypeHasNoRooms(parent),
               validation: (Rule) =>
-                Rule.required().min(0).integer(),
+                Rule.custom((value, context) => {
+                  if (unitTypeHasNoRooms(context.parent)) return true
+                  if (value === undefined || value === null) {
+                    return 'Los baños son obligatorios para esta tipología'
+                  }
+                  if (!Number.isInteger(value) || value < 0) {
+                    return 'Debe ser un número entero mayor o igual a 0'
+                  }
+                  return true
+                }),
             }),
             defineField({
               name: 'price',
@@ -173,13 +219,24 @@ export default defineType({
           preview: {
             select: {
               title: 'name',
+              propertyType: 'propertyType',
               area: 'area',
               price: 'price',
             },
-            prepare({ title, area, price }) {
+            prepare({ title, propertyType, area, price }) {
+              const typeLabels: Record<string, string> = {
+                apartamento:     'Apartamento',
+                casa:            'Casa',
+                'local-oficina': 'Local / Oficina',
+                lote:            'Lote',
+                finca:           'Finca',
+              }
+              const typePrefix = typeLabels[propertyType as string] ?? ''
               return {
                 title,
-                subtitle: `${area}m² · $${price?.toLocaleString('es-CO')}`,
+                subtitle: [typePrefix, `${area}m² · $${price?.toLocaleString('es-CO')}`]
+                  .filter(Boolean)
+                  .join(' · '),
               }
             },
           },
@@ -196,13 +253,20 @@ export default defineType({
       title: 'Avance de obra (%)',
       type: 'number',
       group: 'progress',
-      description: 'Porcentaje de avance de la construcción. Valor entre 0 y 100.',
+      description:
+        'Porcentaje de avance de la construcción. Valor entre 0 y 100. No aplica si el proyecto está en planos: el sitio muestra un avance genérico.',
+      hidden: ({ document }) => document?.status === 'en-planos',
       validation: (Rule) =>
-        Rule.required()
-          .min(0)
-          .max(100)
-          .integer()
-          .error('El avance debe ser un número entero entre 0 y 100'),
+        Rule.custom((value, context) => {
+          if (context.document?.status === 'en-planos') return true
+          if (value === undefined || value === null) {
+            return 'El avance es obligatorio cuando la obra ya inició'
+          }
+          if (!Number.isInteger(value) || value < 0 || value > 100) {
+            return 'El avance debe ser un número entero entre 0 y 100'
+          }
+          return true
+        }),
     }),
 
     defineField({
@@ -210,10 +274,17 @@ export default defineType({
       title: 'Fecha de inicio de obra',
       type: 'date',
       group: 'progress',
+      description: 'Opcional si el proyecto está en planos (puede ser una fecha estimada).',
       options: {
         dateFormat: 'DD/MM/YYYY',
       },
-      validation: (Rule) => Rule.required().error('La fecha de inicio es obligatoria'),
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (context.document?.status === 'en-planos') return true
+          return value
+            ? true
+            : 'La fecha de inicio es obligatoria cuando la obra ya inició'
+        }),
     }),
 
     defineField({
@@ -221,11 +292,17 @@ export default defineType({
       title: 'Fecha estimada de entrega',
       type: 'date',
       group: 'progress',
+      description: 'Opcional si el proyecto está en planos.',
       options: {
         dateFormat: 'DD/MM/YYYY',
       },
       validation: (Rule) =>
-        Rule.required().error('La fecha estimada de entrega es obligatoria'),
+        Rule.custom((value, context) => {
+          if (context.document?.status === 'en-planos') return true
+          return value
+            ? true
+            : 'La fecha estimada de entrega es obligatoria cuando la obra ya inició'
+        }),
     }),
 
     // ─── MEDIA ────────────────────────────────────────────────────────────────
@@ -251,10 +328,11 @@ export default defineType({
 
     defineField({
       name: 'renders',
-      title: 'Galería de renders',
+      title: 'Galería de renders y videos',
       type: 'array',
       group: 'media',
-      description: 'Renders del proyecto: exterior, interior, planos.',
+      description:
+        'Renders del proyecto: exterior, interior, planos. También acepta videos: el primero aparece de primero en la galería y se reproduce automáticamente (sin sonido) en la página del proyecto. Usa MP4 cortos y comprimidos.',
       of: [
         {
           type: 'image',
@@ -275,6 +353,7 @@ export default defineType({
             }),
           ],
         },
+        videoItemMember,
       ],
       validation: (Rule) =>
         Rule.required().min(1).error('Agrega al menos un render del proyecto'),
