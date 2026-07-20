@@ -2,23 +2,29 @@
 import Divider from '@/components/atoms/Divider'
 import Icon from '@/components/atoms/Icon'
 import { formatCOP } from '@/lib/formatPrice'
+import { mapPropertyType } from '@/lib/sanity-mappers'
 
 type UnitTypeCardProps = {
+  propertyType?: string | null
   name: string
   area: number
-  bedrooms: number
-  bathrooms: number
+  bedrooms?: number | null
+  bathrooms?: number | null
   price: number
   className?: string
 }
 
 export default function UnitTypeCard({
-  name, area, bedrooms, bathrooms, price, className,
+  propertyType, name, area, bedrooms, bathrooms, price, className,
 }: UnitTypeCardProps) {
   const specs = [
     { icon: 'Area' as const, label: `${area} m²` },
-    { icon: 'Bed' as const,  label: `${bedrooms} hab` },
-    { icon: 'Bath' as const, label: `${bathrooms} ${bathrooms === 1 ? 'baño' : 'baños'}` },
+    ...(bedrooms != null
+      ? [{ icon: 'Bed' as const, label: `${bedrooms} hab` }]
+      : []),
+    ...(bathrooms != null
+      ? [{ icon: 'Bath' as const, label: `${bathrooms} ${bathrooms === 1 ? 'baño' : 'baños'}` }]
+      : []),
   ]
 
   return (
@@ -28,7 +34,12 @@ export default function UnitTypeCard({
         className,
       ].filter(Boolean).join(' ')}
     >
-      <h3 className="font-display text-display-sm font-semibold text-text-primary">{name}</h3>
+      <div className="flex flex-col gap-1.5">
+        {propertyType && (
+          <p className="text-card-type-eyebrow text-text-muted">{mapPropertyType(propertyType)}</p>
+        )}
+        <h3 className="font-display text-display-sm font-semibold text-text-primary">{name}</h3>
+      </div>
 
       <div className="flex items-center gap-4">
         {specs.map(({ icon, label }) => (

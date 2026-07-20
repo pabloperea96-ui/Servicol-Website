@@ -140,6 +140,7 @@ export const PROJECT_BY_SLUG_QUERY = groq`
     startDate,
     estimatedDelivery,
     unitTypes[] {
+      propertyType,
       name,
       area,
       bedrooms,

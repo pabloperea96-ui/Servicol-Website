@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-07-20 — Tipologías de proyecto con tipo de inmueble
+
+- Cada tipología (`unitTypes`) exige ahora un `propertyType` con la misma lista de
+  `property` (apartamento, casa, local-oficina, lote, finca): los proyectos pueden
+  mezclar vivienda con locales o lotes.
+- Habitaciones y baños se ocultan y dejan de ser obligatorios para Local/Oficina y
+  Lote (validación condicional vía `context.parent`, mismo patrón que "En planos").
+- `UnitTypeCard` muestra el tipo como eyebrow (`text-card-type-eyebrow`, reutiliza
+  `mapPropertyType()`) y omite los specs de hab/baños cuando no aplican. Tipologías
+  existentes sin tipo siguen renderizando (sin eyebrow); el Studio pedirá el tipo al
+  volver a editarlas.
+
 ## 2026-07-20 — Videos en la galería de proyectos con autoplay
 
 - `renders` acepta videos: el objeto `videoItem` (archivo + carátula opcional +

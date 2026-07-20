@@ -101,7 +101,7 @@ después de publicar).
 | Descripción (`description`) | texto | requerido, 50–2000 caracteres | Sección "Descripción" del detalle (cada salto de línea crea un párrafo) |
 | Estado (`status`) | radio: En planos / En construcción / Entregado | requerido | Badge de color en el detalle y texto SEO ("sobre planos", "en construcción", "entregado") |
 | Precio desde (`startingPrice`) | número COP | requerido, mínimo $1.000.000 | Card de la lista ("Desde $X") y meta description. **No** aparece en la barra del detalle |
-| Tipos de propiedad (`unitTypes`) | lista de objetos | mínimo 1; cada una exige nombre, área, habitaciones, baños y precio | Cards de la sección "Tipos de propiedad" del detalle |
+| Tipos de propiedad (`unitTypes`) | lista de objetos | mínimo 1; cada una exige tipo de inmueble (Apartamento / Casa / Local-Oficina / Lote / Finca), nombre, área y precio. Habitaciones y baños solo son obligatorios para vivienda: en Local/Oficina y Lote se ocultan y quedan opcionales | Cards de la sección "Tipos de propiedad" del detalle. El tipo aparece como eyebrow en mayúsculas sobre el nombre; hab/baños solo se muestran si existen |
 
 ### Pestaña "Progreso de obra"
 

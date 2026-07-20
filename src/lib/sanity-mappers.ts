@@ -165,11 +165,12 @@ export function toTestimonialCard(t: SanityTestimonial) {
 // ─── Tipo inferido de los resultados de project en Sanity ────────────────────
 
 export type SanityProjectUnitType = {
-  name:      string
-  area:      number
-  bedrooms:  number
-  bathrooms: number
-  price:     number
+  propertyType?: string | null
+  name:          string
+  area:          number
+  bedrooms:      number | null
+  bathrooms:     number | null
+  price:         number
 }
 
 export type SanityProject = {
