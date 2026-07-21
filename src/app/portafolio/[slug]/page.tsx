@@ -198,7 +198,7 @@ export default async function PropertyDetailPage({
             </div>
           </div>
 
-          <ImageGallery media={images} title={property.title} />
+          <ImageGallery media={images} title={property.title} autoPlayFirstVideo />
 
           {effectiveAdvisor && (
             <PriceInfoBar

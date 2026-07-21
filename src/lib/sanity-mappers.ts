@@ -280,20 +280,23 @@ export type MediaItem =
 
 // ─── Gallery → MediaItem[] para ImageGallery ─────────────────────────────────
 
+// Videos go first so the detail page can autoplay the opening one; images keep
+// the editor's gallery order after them.
 export function toMediaItems(p: SanityProperty): MediaItem[] {
   if (p.gallery && p.gallery.length > 0) {
-    const result: MediaItem[] = []
+    const videos: MediaItem[] = []
+    const images: MediaItem[] = []
     for (const g of p.gallery) {
       if (!g.mediaType || !g.url) continue
       if (g.mediaType === 'image') {
-        result.push({
+        images.push({
           mediaType: 'image',
           url:       g.url,
           alt:       g.alt ?? '',
           ...(g.caption ? { caption: g.caption } : {}),
         })
       } else if (g.mediaType === 'video') {
-        result.push({
+        videos.push({
           mediaType: 'video',
           url:       g.url,
           ...(g.thumbnailUrl ? { thumbnailUrl: g.thumbnailUrl } : {}),
@@ -301,7 +304,7 @@ export function toMediaItems(p: SanityProperty): MediaItem[] {
         })
       }
     }
-    return result
+    return [...videos, ...images]
   }
   return p.mainImageUrl
     ? [{ mediaType: 'image', url: p.mainImageUrl, alt: p.title }]

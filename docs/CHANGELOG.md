@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-21 — Videos con autoplay en la galería de propiedades
+
+- El detalle de propiedad (`/portafolio/[slug]`) activa `autoPlayFirstVideo` en
+  `ImageGallery`: mismo comportamiento que proyectos (hero muted/loop, videos
+  verticales adaptados por dispositivo, lightbox con controles).
+- `toMediaItems()` ordena videos primero para que el hero sea el video; las
+  imágenes conservan el orden del editor. Sin cambios de schema ni queries — la
+  galería de propiedad ya aceptaba `videoItem`.
+
 ## 2026-07-20 — CTA de agendar cita en el detalle de proyecto
 
 - El `CTASection` del final de `/proyectos/[slug]` usa copy propio ("Agenda una cita
